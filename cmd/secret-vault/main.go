@@ -35,7 +35,7 @@ func main() {
 
 	app.Compiled = time.Now()
 
-	// Plugin Flags
+	// Package Flags
 
 	app.Flags = flags()
 
@@ -71,10 +71,11 @@ func run(c *cli.Context) error {
 
 	logrus.WithFields(logrus.Fields{
 		"code": "https://github.com/go-vela/secret-vault",
+
 		// TODO think about a place for secret plugin docs
-		// "docs":     "https://go-vela.github.io/docs/plugins/registry/artifactory",
-		"registry": "https://hub.docker.com/r/target/vela-artifactory",
-	}).Info("Vela Artifactory Plugin")
+		// "docs":     "",
+		"registry": "https://hub.docker.com/r/target/secret-vela",
+	}).Info("Vela Secret Vault Plugin")
 
 	p := Plugin{}
 

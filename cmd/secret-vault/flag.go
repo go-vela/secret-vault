@@ -15,7 +15,7 @@ import (
 func flags() []cli.Flag {
 	f := []cli.Flag{
 		&cli.StringFlag{
-			EnvVars: []string{"PARAMETER_LOG_LEVEL", "VELA_LOG_LEVEL", "ARTIFACTORY_LOG_LEVEL"},
+			EnvVars: []string{"PARAMETER_LOG_LEVEL", "VELA_LOG_LEVEL", "LOG_LEVEL"},
 			Name:    "log.level",
 			Usage:   "set log level - options: (trace|debug|info|warn|error|fatal|panic)",
 			Value:   "info",

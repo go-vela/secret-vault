@@ -12,7 +12,7 @@ import (
 type Plugin struct {
 }
 
-// Exec formats and runs the commands for managing artifacts in Artifactory.
+// Exec runs the Vault plugin to read secrets into the Vela platform.
 func (p *Plugin) Exec() error {
 	logrus.Debug("running plugin with provided configuration")
 

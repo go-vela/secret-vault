@@ -18,7 +18,7 @@ import (
 func main() {
 	app := cli.NewApp()
 
-	// Package Information
+	// Plugin Information
 
 	app.Name = "secret-vault"
 	app.HelpName = "secret-vault"
@@ -31,11 +31,11 @@ func main() {
 		},
 	}
 
-	// Package Metadata
+	// Plugin Metadata
 
 	app.Compiled = time.Now()
 
-	// Package Flags
+	// Plugin Flags
 
 	app.Flags = flags()
 

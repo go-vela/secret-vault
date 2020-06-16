@@ -17,7 +17,7 @@ var Flags = []cli.Flag{
 	// Logging Flags
 
 	&cli.StringFlag{
-		EnvVars: []string{"RUNTIME_LOG_LEVEL", "VELA_LOG_LEVEL", "LOG_LEVEL"},
+		EnvVars: []string{"VAULT_LOG_LEVEL", "VELA_LOG_LEVEL", "LOG_LEVEL"},
 		Name:    "log.level",
 		Usage:   "set log level - options: (trace|debug|info|warn|error|fatal|panic)",
 		Value:   "info",

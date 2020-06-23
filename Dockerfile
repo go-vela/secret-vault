@@ -14,7 +14,7 @@ RUN apk add --update --no-cache ca-certificates
 ##      docker build --no-cache -t secret-vault:local .      ##
 ###############################################################
 
-FROM scratch
+FROM alpine:latest
 
 COPY --from=certs /etc/ssl/certs/ca-certificates.crt /etc/ssl/certs/ca-certificates.crt
 

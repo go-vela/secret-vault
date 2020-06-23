@@ -14,7 +14,6 @@ run: binary-build docker-build docker-run
 
 test: binary-build docker-build docker-example
 
-
 clean:
 	#################################
 	######      Go clean       ######
@@ -88,4 +87,4 @@ docker-example:
 		-e PARAMETER_TOKEN=vela \
 		-e PARAMETER_PATH=secret/my-secret  \
 		-e PARAMETER_KEYS=foo \
-		secret-vault:local	
+		secret-vault:local

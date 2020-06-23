@@ -6,11 +6,13 @@ package main
 
 import (
 	"errors"
-	"os"
+	"fmt"
+	"path/filepath"
 	"strings"
 
 	"github.com/go-vela/secret-vault/vault"
 	"github.com/sirupsen/logrus"
+	"github.com/spf13/afero"
 )
 
 var (
@@ -21,6 +23,10 @@ var (
 	// ErrNoKeysProvided defines the error type when a
 	// no keys was provided for a Vault read
 	ErrNoKeysProvided = errors.New("no keys provided")
+
+	// appFS is a new os filesystem implementation for
+	// interacting with modifications to the filesystem
+	appFS = afero.NewOsFs()
 )
 
 // Read represents the plugin configuration reading secrets to the environment.
@@ -34,6 +40,11 @@ type Read struct {
 // Exec runs the read for collecting secrets
 func (r Read) Exec(v *vault.Client) error {
 	logrus.Debug("running plugin with provided configuration")
+
+	// use custom filesystem which enables us to test
+	a := &afero.Afero{
+		Fs: appFS,
+	}
 
 	paths := strings.Split(r.Path, "/")
 	name := paths[len(paths)-1]
@@ -52,8 +63,18 @@ func (r Read) Exec(v *vault.Client) error {
 		// 	return fmt.Errorf("unable to extract secret data")
 		// }
 
-		// set the secret on the environment
-		err = os.Setenv(strings.ToUpper(name), secret.Data[key].(string))
+		// set the location of where to write the secret
+		path := fmt.Sprintf("/vela/secrets/%s", strings.ToLower(name))
+
+		// send Filesystem call to create directory path for .netrc file
+		err = a.Fs.MkdirAll(filepath.Dir(path), 0777)
+		if err != nil {
+			return err
+		}
+
+		// set the secret in the Vela temp build volume
+		//TODO consider making a const for the Vela secret path
+		err = a.WriteFile(path, []byte(secret.Data[key].(string)), 0600)
 		if err != nil {
 			return err
 		}

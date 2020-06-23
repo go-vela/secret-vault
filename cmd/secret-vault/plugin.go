@@ -31,7 +31,7 @@ func (p *Plugin) Exec() error {
 		return err
 	}
 
-	logrus.Info("read secrets to environment")
+	logrus.Info("read secrets to volume")
 
 	return nil
 }

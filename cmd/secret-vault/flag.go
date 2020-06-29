@@ -15,10 +15,14 @@ import (
 func flags() []cli.Flag {
 	f := []cli.Flag{
 		&cli.StringFlag{
-			EnvVars: []string{"PARAMETER_LOG_LEVEL", "VELA_LOG_LEVEL", "LOG_LEVEL"},
-			Name:    "log.level",
-			Usage:   "set log level - options: (trace|debug|info|warn|error|fatal|panic)",
-			Value:   "info",
+			EnvVars: []string{"PARAMETER_PATH", "PATH"},
+			Name:    "path",
+			Usage:   "path to a secret stored in vault",
+		},
+		&cli.StringSliceFlag{
+			EnvVars: []string{"PARAMETER_KEYS", "KEYS"},
+			Name:    "keys",
+			Usage:   "the keys to extract out of the item stored in Vault",
 		},
 	}
 

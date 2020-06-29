@@ -19,7 +19,6 @@ func main() {
 	app := cli.NewApp()
 
 	// Plugin Information
-
 	app.Name = "secret-vault"
 	app.HelpName = "secret-vault"
 	app.Usage = "Vela Vault secret plugin for sourcing secrets into pipelines"
@@ -32,15 +31,13 @@ func main() {
 	}
 
 	// Plugin Metadata
-
 	app.Compiled = time.Now()
+	app.Action = run
 
 	// Plugin Flags
-
 	app.Flags = flags()
 
 	// Plugin Start
-
 	err := app.Run(os.Args)
 	if err != nil {
 		log.Fatal(err)
@@ -77,7 +74,23 @@ func run(c *cli.Context) error {
 		"registry": "https://hub.docker.com/r/target/secret-vela",
 	}).Info("Vela Secret Vault Plugin")
 
-	p := Plugin{}
+	// setup plugin
+	p := Plugin{
+		Config: &Config{
+			Addr:  c.String("config.addr"),
+			Token: c.String("config.token"),
+		},
+		Read: &Read{
+			Path: c.String("path"),
+			Keys: c.StringSlice("keys"),
+		},
+	}
+
+	// validate the plugin configuration
+	err := p.Validate()
+	if err != nil {
+		return nil
+	}
 
 	// execute the plugin
 	return p.Exec()

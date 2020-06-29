@@ -17,6 +17,10 @@ func TestVault_Plugin_Validate(t *testing.T) {
 			Addr:  "https://myvault.com/",
 			Token: "superSecretAPIKey",
 		},
+		Read: &Read{
+			Path: "/path/to/secret",
+			Keys: []string{"foobar"},
+		},
 	}
 
 	err := p.Validate()

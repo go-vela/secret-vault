@@ -35,8 +35,6 @@ func TestVault_Plugin_Validate(t *testing.T) {
 			},
 			err: nil,
 		},
-<<<<<<< HEAD
-=======
 		{ // success with ldap config and read action
 			plugin: &Plugin{
 				Config: &Config{
@@ -52,7 +50,6 @@ func TestVault_Plugin_Validate(t *testing.T) {
 			},
 			err: nil,
 		},
->>>>>>> 6fc7396... feat: add ability to read from vault with ldap provider
 	}
 
 	// run test

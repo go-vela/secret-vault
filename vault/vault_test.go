@@ -5,6 +5,7 @@
 package vault
 
 import (
+	"fmt"
 	"net/http"
 	"net/http/httptest"
 	"testing"
@@ -15,25 +16,85 @@ func TestVault_New(t *testing.T) {
 	fake := httptest.NewServer(http.NotFoundHandler())
 	defer fake.Close()
 
-	// run test
-	s, err := New(fake.URL, "foo")
-	if err != nil {
-		t.Errorf("New returned err: %v", err)
+	vault, _ := NewMock(t)
+
+	// setup types
+	tests := []struct {
+		setup *Setup
+		err   error
+	}{
+		{ // Success with token auth method
+			setup: &Setup{
+				Addr:       vault.Vault.Address(),
+				AuthMethod: TokenAuthMethod,
+				Token:      "supersecrettoken",
+			},
+			err: nil,
+		},
+		// TODO: investigate how to put mock vault in a mode with a fake LDAP provider
+		// { // Success with token auth method
+		// 	setup: &Setup{
+		// 		Addr:       vault.Vault.Address(),
+		// 		AuthMethod: LDAPAuthMethod,
+		// 		Password:   "superSecretPassword",
+		// 		Username:   "myusername",
+		// 	},
+		// 	err: nil,
+		// },
 	}
 
-	if s == nil {
-		t.Error("New returned nil client")
+	// run test
+	for _, test := range tests {
+		vault, err := New(test.setup)
+		if err != test.err {
+			t.Errorf("New returned err: %v", err)
+		}
+
+		if vault == nil {
+			t.Error("New returned nil client")
+		}
 	}
 }
 
 func TestVault_New_Error(t *testing.T) {
-	// run test
-	s, err := New("!@#$%^&*()", "")
-	if err == nil {
-		t.Errorf("New should have returned err")
+	// setup mock server
+	fake := httptest.NewServer(http.NotFoundHandler())
+	defer fake.Close()
+
+	// setup types
+	tests := []struct {
+		setup *Setup
+		err   error
+	}{
+		{ // failure with bad address and fake auth method
+			setup: &Setup{
+				Addr:       "!@#$%^&*()",
+				AuthMethod: "fake",
+				Token:      "",
+			},
+			err: fmt.Errorf("invalid auth method provided: fake (Valid auth methods: ldap, token)"),
+		},
+		{ // failure with no address
+			setup: &Setup{
+				AuthMethod: "fake",
+				Token:      "",
+			},
+			err: fmt.Errorf("invalid auth method provided: fake (Valid auth methods: ldap, token)"),
+		},
+		{ // failure with no auth method
+			setup: &Setup{
+				Addr:  "!@#$%^&*()",
+				Token: "",
+			},
+			err: fmt.Errorf("invalid auth method provided: fake (Valid auth methods: ldap, token)"),
+		},
 	}
 
-	if s != nil {
-		t.Error("New should have returned nil client")
+	// run test
+	for _, test := range tests {
+		_, err := New(test.setup)
+		if err == test.err {
+			t.Errorf("New returned err: %v", err)
+		}
 	}
 }

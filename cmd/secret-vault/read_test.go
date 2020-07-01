@@ -49,5 +49,4 @@ func TestVault_Read_Validate(t *testing.T) {
 			t.Errorf("Validate returned err: %v", err)
 		}
 	}
-
 }

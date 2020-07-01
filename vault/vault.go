@@ -72,8 +72,6 @@ func New(s *Setup) (*Client, error) {
 			return nil, err
 		}
 
-		fmt.Println("I AM HERE")
-
 		// options for passing the password
 		options := map[string]interface{}{
 			"password": s.Password,

@@ -77,8 +77,11 @@ func run(c *cli.Context) error {
 	// setup plugin
 	p := Plugin{
 		Config: &Config{
-			Addr:  c.String("config.addr"),
-			Token: c.String("config.token"),
+			Addr:       c.String("config.addr"),
+			AuthMethod: c.String("config.auth-method"),
+			Password:   c.String("config.password"),
+			Token:      c.String("config.token"),
+			Username:   c.String("config.username"),
 		},
 		Read: &Read{
 			Path: c.String("path"),
@@ -89,7 +92,7 @@ func run(c *cli.Context) error {
 	// validate the plugin configuration
 	err := p.Validate()
 	if err != nil {
-		return nil
+		return err
 	}
 
 	// execute the plugin

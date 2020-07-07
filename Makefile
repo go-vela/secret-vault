@@ -58,7 +58,7 @@ vault-seed:
 	#################################
 
 	VAULT_ADDR=http://localhost:8200 \
-		VAULT_TOKEN=vela \
+		VAULT_TOKEN=superSecretToken \
 		vault write secret/my-secret foo=bar
 
 docker-run:
@@ -70,9 +70,12 @@ docker-run:
 		--network secret-vault_vault \
 		-e PARAMETER_LOG_LEVEL \
 		-e PARAMETER_ADDR \
-		-e PARAMETER_TOKEN \
-		-e PARAMETER_PATH \
+		-e PARAMETER_AUTH_METHOD \
 		-e PARAMETER_KEYS \
+		-e PARAMETER_PATH \
+		-e PARAMETER_PASSWORD \
+		-e PARAMETER_TOKEN \
+		-e PARAMETER_USERNAME \
 		secret-vault:local	
 
 docker-example:
@@ -84,7 +87,10 @@ docker-example:
 		--network secret-vault_vault \
 		-e PARAMETER_LOG_LEVEL=trace \
 		-e PARAMETER_ADDR=http://vault:8200 \
-		-e PARAMETER_TOKEN=vela \
+		-e PARAMETER_AUTH_METHOD=token \
+		-e PARAMETER_KEYS=foo \		
 		-e PARAMETER_PATH=secret/my-secret  \
-		-e PARAMETER_KEYS=foo \
+		-e PARAMETER_PASSWORD=superSecretPassword  \
+		-e PARAMETER_TOKEN=superSecretToken \
+		-e PARAMETER_USERNAME=myusername \
 		secret-vault:local

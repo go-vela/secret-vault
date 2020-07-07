@@ -30,13 +30,23 @@ var Flags = []cli.Flag{
 		Usage:   "name of runtime driver to use",
 	},
 	&cli.StringFlag{
-		EnvVars: []string{"PARAMETER_TOKEN", "SECRET_VAULT_TOKEN", "VELA_VAULT_TOKEN", "VAULT_TOKEN"},
-		Name:    "config.token",
-		Usage:   "vault token for storing secrets",
-	},
-	&cli.StringFlag{
 		EnvVars: []string{"PARAMETER_AUTH_METHOD", "SECRET_AUTH_METHOD", "VAULT_AUTH_METHOD"},
 		Name:    "config.auth-method",
 		Usage:   "vault token for storing secrets",
+	},
+	&cli.StringFlag{
+		EnvVars: []string{"PARAMETER_PASSWORD", "SECRET_VAULT_PASSWORD", "VELA_VAULT_PASSWORD", "VAULT_PASSWORD"},
+		Name:    "config.password",
+		Usage:   "vault password for server authentication",
+	},
+	&cli.StringFlag{
+		EnvVars: []string{"PARAMETER_TOKEN", "SECRET_VAULT_TOKEN", "VELA_VAULT_TOKEN", "VAULT_TOKEN"},
+		Name:    "config.token",
+		Usage:   "vault token for server authentication",
+	},
+	&cli.StringFlag{
+		EnvVars: []string{"PARAMETER_USERNAME", "SECRET_VAULT_USERNAME", "VELA_VAULT_USERNAME", "VAULT_USERNAME"},
+		Name:    "config.username",
+		Usage:   "vault username for server authentication",
 	},
 }

@@ -50,6 +50,10 @@ func TestVault_Plugin_Validate(t *testing.T) {
 			},
 			err: nil,
 		},
+		Read: &Read{
+			Path: "/path/to/secret",
+			Keys: []string{"foobar"},
+		},
 	}
 
 	// run test

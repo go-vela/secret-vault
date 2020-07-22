@@ -57,6 +57,7 @@ func (r Read) Exec(v *vault.Client) error {
 
 	// write data to environment
 	for _, key := range r.Keys {
+		logrus.Tracef("writing data from key %s", key)
 		// TODO support none key=value secrets in vault
 		// m, ok := secret.Data["foo"].(map[string]interface{})
 		// if !ok {
@@ -67,6 +68,7 @@ func (r Read) Exec(v *vault.Client) error {
 		path := fmt.Sprintf("/vela/secrets/%s", strings.ToLower(name))
 
 		// send Filesystem call to create directory path for .netrc file
+		logrus.Tracef("creating directories in path %s", path)
 		err = a.Fs.MkdirAll(filepath.Dir(path), 0777)
 		if err != nil {
 			return err
@@ -74,6 +76,7 @@ func (r Read) Exec(v *vault.Client) error {
 
 		// set the secret in the Vela temp build volume
 		//TODO consider making a const for the Vela secret path
+		logrus.Tracef("write data to file %s", path)
 		err = a.WriteFile(path, []byte(secret.Data[key].(string)), 0600)
 		if err != nil {
 			return err

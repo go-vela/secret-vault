@@ -50,6 +50,7 @@ func (r Read) Exec(v *vault.Client) error {
 	name := paths[len(paths)-1]
 
 	// read data from the vault provider
+	logrus.Tracef("reading data from path %s", r.Path)
 	secret, err := v.Read(r.Path)
 	if err != nil {
 		return err
@@ -77,7 +78,7 @@ func (r Read) Exec(v *vault.Client) error {
 		// set the secret in the Vela temp build volume
 		//TODO consider making a const for the Vela secret path
 		logrus.Tracef("write data to file %s", path)
-		err = a.WriteFile(path, []byte(secret.Data[key].(string)), 0600)
+		err = a.WriteFile(path, []byte(secret.Data[key].(string)), 0444)
 		if err != nil {
 			return err
 		}

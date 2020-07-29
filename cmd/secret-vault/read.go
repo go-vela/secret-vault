@@ -128,7 +128,7 @@ func (r *Read) Validate() error {
 	logrus.Trace("validating read plugin configuration")
 
 	if len(r.Items) == 0 {
-		return ErrNoPathProvided
+		return ErrNoItemsProvided
 	}
 
 	for i, item := range r.Items {

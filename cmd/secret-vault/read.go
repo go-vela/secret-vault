@@ -74,6 +74,7 @@ func (r *Read) Exec(v *vault.Client) error {
 
 		// read data from the vault provider
 		logrus.Tracef("reading data from path %s", item.Source)
+
 		secret, err := v.Read(item.Source)
 		if err != nil {
 			return err
@@ -86,6 +87,7 @@ func (r *Read) Exec(v *vault.Client) error {
 
 			// send Filesystem call to create directory path for .netrc file
 			logrus.Tracef("creating directories in path %s", path)
+
 			err := a.Fs.MkdirAll(filepath.Dir(target), 0777)
 			if err != nil {
 				return err
@@ -93,12 +95,12 @@ func (r *Read) Exec(v *vault.Client) error {
 
 			// set the secret in the Vela temp build volume
 			logrus.Tracef("write data to file %s", path)
+
 			err = a.WriteFile(path, []byte(v.(string)), 0444)
 			if err != nil {
 				return err
 			}
 		}
-
 	}
 
 	return nil

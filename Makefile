@@ -67,6 +67,7 @@ docker-run:
 	#################################
 
 	docker run --rm \
+		--network secret-vault_vault \
 		-e PARAMETER_LOG_LEVEL \
 		-e PARAMETER_ADDR \
 		-e PARAMETER_AUTH_METHOD \

@@ -84,8 +84,7 @@ func run(c *cli.Context) error {
 			Username:   c.String("config.username"),
 		},
 		Read: &Read{
-			Path: c.String("path"),
-			Keys: c.StringSlice("keys"),
+			RawItems: c.String("items"),
 		},
 	}
 

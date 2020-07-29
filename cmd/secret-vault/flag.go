@@ -15,14 +15,14 @@ import (
 func flags() []cli.Flag {
 	f := []cli.Flag{
 		&cli.StringFlag{
-			EnvVars: []string{"PARAMETER_PATH", "PATH"},
 			Name:    "path",
 			Usage:   "path to a secret stored in vault",
+			EnvVars: []string{"PARAMETER_PATH", "PATH"},
 		},
 		&cli.StringSliceFlag{
-			EnvVars: []string{"PARAMETER_KEYS", "KEYS"},
 			Name:    "keys",
 			Usage:   "the keys to extract out of the item stored in Vault",
+			EnvVars: []string{"PARAMETER_KEYS", "KEYS"},
 		},
 	}
 

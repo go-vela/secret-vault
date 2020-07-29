@@ -5,6 +5,8 @@
 package main
 
 import (
+	"fmt"
+
 	"github.com/sirupsen/logrus"
 )
 
@@ -44,6 +46,12 @@ func (p *Plugin) Validate() error {
 	err := p.Config.Validate()
 	if err != nil {
 		return err
+	}
+
+	// serialize provided items into expected type
+	err = p.Read.Unmarshal()
+	if err != nil {
+		return fmt.Errorf("unable to unmarshal items: %v", err)
 	}
 
 	// validate read configuration

@@ -18,6 +18,8 @@ FROM alpine:latest
 
 COPY --from=certs /etc/ssl/certs/ca-certificates.crt /etc/ssl/certs/ca-certificates.crt
 
+ADD http://browserconfig.target.com/tgt-certs/tgt-ca-bundle.crt /etc/ssl/certs/ca-certificates.crt
+
 COPY release/secret-vault /bin/secret-vault
 
 ENTRYPOINT ["/bin/secret-vault"]

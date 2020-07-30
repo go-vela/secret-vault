@@ -14,14 +14,9 @@ import (
 // the plugin configuration
 func flags() []cli.Flag {
 	f := []cli.Flag{
-		&cli.StringFlag{
-			Name:    "path",
-			Usage:   "path to a secret stored in vault",
-			EnvVars: []string{"PARAMETER_PATH", "PATH"},
-		},
 		&cli.StringSliceFlag{
-			Name:    "keys",
-			Usage:   "the keys to extract out of the item stored in Vault",
+			Name:    "items",
+			Usage:   "list of items to extract from a Vault",
 			EnvVars: []string{"PARAMETER_KEYS", "KEYS"},
 		},
 	}

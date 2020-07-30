@@ -27,26 +27,26 @@ var Flags = []cli.Flag{
 	&cli.StringFlag{
 		EnvVars: []string{"PARAMETER_ADDR", "SECRET_VAULT_ADDR", "VELA_VAULT_ADDR", "VAULT_ADDR"},
 		Name:    "config.addr",
-		Usage:   "name of runtime driver to use",
+		Usage:   "address to the instance",
 	},
 	&cli.StringFlag{
 		EnvVars: []string{"PARAMETER_AUTH_METHOD", "SECRET_AUTH_METHOD", "VAULT_AUTH_METHOD"},
 		Name:    "config.auth-method",
-		Usage:   "vault token for storing secrets",
+		Usage:   "authentication method for interfacing instance - options: (token|ldap)",
 	},
 	&cli.StringFlag{
 		EnvVars: []string{"PARAMETER_PASSWORD", "SECRET_VAULT_PASSWORD", "VELA_VAULT_PASSWORD", "VAULT_PASSWORD"},
 		Name:    "config.password",
-		Usage:   "vault password for server authentication",
+		Usage:   "password for server authentication with LDAP",
 	},
 	&cli.StringFlag{
 		EnvVars: []string{"PARAMETER_TOKEN", "SECRET_VAULT_TOKEN", "VELA_VAULT_TOKEN", "VAULT_TOKEN"},
 		Name:    "config.token",
-		Usage:   "vault token for server authentication",
+		Usage:   "token for server authentication",
 	},
 	&cli.StringFlag{
 		EnvVars: []string{"PARAMETER_USERNAME", "SECRET_VAULT_USERNAME", "VELA_VAULT_USERNAME", "VAULT_USERNAME"},
 		Name:    "config.username",
-		Usage:   "vault username for server authentication",
+		Usage:   "username for server authentication with LDAP",
 	},
 }

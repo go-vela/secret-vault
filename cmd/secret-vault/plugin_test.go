@@ -5,6 +5,7 @@
 package main
 
 import (
+	"encoding/json"
 	"testing"
 
 	"github.com/go-vela/secret-vault/vault"
@@ -16,7 +17,13 @@ func TestVault_Plugin_Exec(t *testing.T) {
 
 func TestVault_Plugin_Validate(t *testing.T) {
 	// setup types
-	// setup types
+	items, _ := json.Marshal([]Item{
+		{
+			Path:   "foobar",
+			Source: "/path/to/secret",
+		},
+	})
+
 	tests := []struct {
 		plugin *Plugin
 		err    error
@@ -29,8 +36,7 @@ func TestVault_Plugin_Validate(t *testing.T) {
 					Token:      "superSecretAPIKey",
 				},
 				Read: &Read{
-					Path: "/path/to/secret",
-					Keys: []string{"foobar"},
+					RawItems: string(items),
 				},
 			},
 			err: nil,
@@ -44,8 +50,7 @@ func TestVault_Plugin_Validate(t *testing.T) {
 					Username:   "myusername",
 				},
 				Read: &Read{
-					Path: "/path/to/secret",
-					Keys: []string{"foobar"},
+					RawItems: string(items),
 				},
 			},
 			err: nil,

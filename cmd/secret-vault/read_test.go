@@ -6,13 +6,39 @@ package main
 
 import (
 	"testing"
+
+	"github.com/go-vela/secret-vault/vault"
+	"github.com/spf13/afero"
 )
 
 func TestVault_Read_Exec(t *testing.T) {
-	// TODO write this test
+	// step types
+	vault, _ := vault.NewMock(t)
+	source := "secret/foo"
+	r := &Read{
+		Items: []Item{
+			{
+				Path:   "foobar",
+				Source: source,
+			},
+		},
+	}
+
+	// setup filesystem
+	appFS = afero.NewMemMapFs()
+
+	// initialize vault with test data
+	vault.Vault.Logical().Write(source, map[string]interface{}{
+		"secret": "bar",
+	})
+
+	err := r.Exec(vault)
+	if err != nil {
+		t.Errorf("Validate returned err: %v", err)
+	}
 }
 
-func TestVault_Read_Validate(t *testing.T) {
+func TestVault_Read_Validate_success(t *testing.T) {
 	// setup types
 	tests := []struct {
 		read *Read
@@ -21,32 +47,61 @@ func TestVault_Read_Validate(t *testing.T) {
 		{
 			// success
 			read: &Read{
-				Path: "/path/to/secret",
-				Keys: []string{"foobar"},
+				Items: []Item{
+					{
+						Path:   "foobar",
+						Source: "/path/to/secret",
+					},
+				},
 			},
 			err: nil,
-		},
-		{
-			// error with no path
-			read: &Read{
-				Keys: []string{"foobar"},
-			},
-			err: ErrNoPathProvided,
-		},
-		{
-			// error with no path
-			read: &Read{
-				Path: "/path/to/secret",
-			},
-			err: ErrNoKeysProvided,
 		},
 	}
 
 	// run test
 	for _, test := range tests {
 		err := test.read.Validate()
-		if err != test.err {
+		if err != nil {
 			t.Errorf("Validate returned err: %v", err)
+		}
+	}
+}
+
+func TestVault_Read_Validate_failure(t *testing.T) {
+	// setup types
+	tests := []struct {
+		read *Read
+		err  error
+	}{
+		{
+			// error with no path
+			read: &Read{
+				Items: []Item{
+					{
+						Source: "/path/to/secret",
+					},
+				},
+			},
+			err: ErrNoPathProvided,
+		},
+		{
+			// error with no source
+			read: &Read{
+				Items: []Item{
+					{
+						Path: "foobar",
+					},
+				},
+			},
+			err: ErrNoSourceProvided,
+		},
+	}
+
+	// run test
+	for _, test := range tests {
+		err := test.read.Validate()
+		if err == nil {
+			t.Errorf("Validate should have returned err: %v", err)
 		}
 	}
 }

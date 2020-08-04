@@ -5,6 +5,7 @@
 package main
 
 import (
+	"encoding/json"
 	"errors"
 	"fmt"
 	"path/filepath"
@@ -16,29 +17,47 @@ import (
 )
 
 var (
+	// ErrNoKeysProvided defines the error type when a
+	// no items were provided for a Vault read
+	ErrNoItemsProvided = errors.New("no items provided")
+
 	// ErrNoPathProvided defines the error type when a
 	// no path was provided for a Vault read
 	ErrNoPathProvided = errors.New("no path provided")
 
 	// ErrNoKeysProvided defines the error type when a
 	// no keys was provided for a Vault read
-	ErrNoKeysProvided = errors.New("no keys provided")
+	ErrNoSourceProvided = errors.New("no source provided")
 
 	// appFS is a new os filesystem implementation for
 	// interacting with modifications to the filesystem
 	appFS = afero.NewOsFs()
+
+	// SecretVolume defines volume that stores secrets
+	// during a build execution
+	SecretVolume = "/vela/secrets/%s/"
 )
 
-// Read represents the plugin configuration reading secrets to the environment.
-type Read struct {
-	// is the path to where the secret is stored
-	Path string
-	// is the keys to extract from the secret store
-	Keys []string
-}
+type (
+	// Read represents the plugin configuration reading secrets to the environment.
+	Read struct {
+		// is a list of items that are in a Vault instance
+		Items []Item
+		// raw input of items provided for plugin
+		RawItems string
+	}
+
+	// Item represents how to read an item from a location and where to write it to.
+	Item struct {
+		// is the path to where the secret is stored in Vault
+		Source string
+		// is the path to store the key in Vela
+		Path string
+	}
+)
 
 // Exec runs the read for collecting secrets
-func (r Read) Exec(v *vault.Client) error {
+func (r *Read) Exec(v *vault.Client) error {
 	logrus.Debug("running plugin with provided configuration")
 
 	// use custom filesystem which enables us to test
@@ -46,59 +65,82 @@ func (r Read) Exec(v *vault.Client) error {
 		Fs: appFS,
 	}
 
-	paths := strings.Split(r.Path, "/")
-	name := paths[len(paths)-1]
+	for _, item := range r.Items {
+		// remove any leading slashes from path
+		path := strings.TrimPrefix(item.Path, "/")
 
-	// read data from the vault provider
-	logrus.Tracef("reading data from path %s", r.Path)
-	secret, err := v.Read(r.Path)
-	if err != nil {
-		return err
-	}
+		// remove any trailing slashes from path
+		path = strings.TrimSuffix(item.Path, "/")
 
-	// write data to environment
-	for _, key := range r.Keys {
-		logrus.Tracef("writing data from key %s", key)
-		// TODO support none key=value secrets in vault
-		// m, ok := secret.Data["foo"].(map[string]interface{})
-		// if !ok {
-		// 	return fmt.Errorf("unable to extract secret data")
-		// }
+		// read data from the vault provider
+		logrus.Tracef("reading data from path %s", item.Source)
 
-		// set the location of where to write the secret
-		path := fmt.Sprintf("/vela/secrets/%s", strings.ToLower(name))
-
-		// send Filesystem call to create directory path for .netrc file
-		logrus.Tracef("creating directories in path %s", path)
-		err = a.Fs.MkdirAll(filepath.Dir(path), 0777)
+		secret, err := v.Read(item.Source)
 		if err != nil {
 			return err
 		}
 
-		// set the secret in the Vela temp build volume
-		//TODO consider making a const for the Vela secret path
-		logrus.Tracef("write data to file %s", path)
-		err = a.WriteFile(path, []byte(secret.Data[key].(string)), 0444)
-		if err != nil {
-			return err
+		// loop through keys in vault secret
+		for k, v := range secret.Data {
+			// set the location of where to write the secret
+			target := fmt.Sprintf(SecretVolume, fmt.Sprintf("%s/%s", path, k))
+
+			// send Filesystem call to create directory path for .netrc file
+			logrus.Tracef("creating directories in path %s", path)
+
+			err := a.Fs.MkdirAll(filepath.Dir(target), 0777)
+			if err != nil {
+				return err
+			}
+
+			// set the secret in the Vela temp build volume
+			logrus.Tracef("write data to file %s", path)
+
+			err = a.WriteFile(path, []byte(v.(string)), 0444)
+			if err != nil {
+				return err
+			}
 		}
 	}
 
 	return nil
 }
 
-// Validate verifies the Copy is properly configured.
-func (r Read) Validate() error {
-	logrus.Trace("validating read plugin configuration")
+// Unmarshal captures the provided properties and
+// serializes them into their expected form.
+func (r *Read) Unmarshal() error {
+	logrus.Trace("unmarshaling raw props")
 
-	// verify path is provided
-	if len(r.Path) == 0 {
-		return ErrNoPathProvided
+	// cast raw items into bytes
+	bytes := []byte(r.RawItems)
+
+	// serialize raw items into expected Items type
+	err := json.Unmarshal(bytes, &r.Items)
+	if err != nil {
+		return err
 	}
 
-	// verify keys is provided
-	if len(r.Keys) == 0 {
-		return ErrNoKeysProvided
+	return nil
+}
+
+// Validate verifies the Copy is properly configured.
+func (r *Read) Validate() error {
+	logrus.Trace("validating read plugin configuration")
+
+	if len(r.Items) == 0 {
+		return ErrNoItemsProvided
+	}
+
+	for i, item := range r.Items {
+		// verify path is provided
+		if len(item.Path) == 0 {
+			return fmt.Errorf("%s for item %d", ErrNoPathProvided, i)
+		}
+
+		// verify source is provided
+		if len(item.Source) == 0 {
+			return fmt.Errorf("%s for item %d", ErrNoSourceProvided, i)
+		}
 	}
 
 	return nil

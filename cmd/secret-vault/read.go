@@ -80,18 +80,21 @@ func (r *Read) Exec(v *vault.Client) error {
 			return err
 		}
 
+		// set the location of where to write the secret
+		target := fmt.Sprintf(SecretVolume, path)
+
+		// send Filesystem call to create directory path for .netrc file
+		logrus.Tracef("creating directories in path %s", path)
+
+		err = a.Fs.MkdirAll(filepath.Dir(target), 0777)
+		if err != nil {
+			return err
+		}
+
 		// loop through keys in vault secret
 		for k, v := range secret.Data {
-			// set the location of where to write the secret
-			target := fmt.Sprintf(SecretVolume, fmt.Sprintf("%s/%s", path, k))
 
-			// send Filesystem call to create directory path for .netrc file
-			logrus.Tracef("creating directories in path %s", path)
-
-			err := a.Fs.MkdirAll(filepath.Dir(target), 0777)
-			if err != nil {
-				return err
-			}
+			path = target + k
 
 			// set the secret in the Vela temp build volume
 			logrus.Tracef("write data to file %s", path)

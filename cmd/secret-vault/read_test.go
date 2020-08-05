@@ -5,6 +5,7 @@
 package main
 
 import (
+	"reflect"
 	"testing"
 
 	"github.com/go-vela/secret-vault/vault"
@@ -103,5 +104,31 @@ func TestVault_Read_Validate_failure(t *testing.T) {
 		if err == nil {
 			t.Errorf("Validate should have returned err: %v", err)
 		}
+	}
+}
+
+func TestVault_Read_Unmarshal(t *testing.T) {
+	// setup types
+	r := &Read{
+		RawItems: `
+		[
+			{"path":"foo","source":"secret/vela/hello_world"}
+		]
+		`}
+
+	want := []*Item{
+		{
+			Path:   "foo",
+			Source: "secret/vela/hello_world",
+		},
+	}
+
+	err := r.Unmarshal()
+	if err != nil {
+		t.Errorf("Unmarshal returned err: %v", err)
+	}
+
+	if !reflect.DeepEqual(r.Items, want) {
+		t.Errorf("Unmarshal is %v, want %v", r.Items, want)
 	}
 }

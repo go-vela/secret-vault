@@ -14,7 +14,7 @@ import (
 // the plugin configuration
 func flags() []cli.Flag {
 	f := []cli.Flag{
-		&cli.StringSliceFlag{
+		&cli.StringFlag{
 			Name:    "items",
 			Usage:   "list of items to extract from a Vault",
 			EnvVars: []string{"PARAMETER_ITEMS", "ITEMS"},

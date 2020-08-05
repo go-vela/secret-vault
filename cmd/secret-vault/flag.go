@@ -17,7 +17,7 @@ func flags() []cli.Flag {
 		&cli.StringSliceFlag{
 			Name:    "items",
 			Usage:   "list of items to extract from a Vault",
-			EnvVars: []string{"PARAMETER_KEYS", "KEYS"},
+			EnvVars: []string{"PARAMETER_ITEMS", "ITEMS"},
 		},
 	}
 

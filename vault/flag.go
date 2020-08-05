@@ -25,23 +25,28 @@ var Flags = []cli.Flag{
 
 	// Config Flags
 	&cli.StringFlag{
-		Name:  "config.addr",
-		Usage: "address to the instance",
+		Name:    "config.addr",
+		Usage:   "address to the instance",
+		EnvVars: []string{"PARAMETER_ADDR", "SECRET_VAULT_ADDR", "VELA_VAULT_ADDR", "VAULT_ADDR"},
 	},
 	&cli.StringFlag{
-		Name:  "config.auth-method",
-		Usage: "authentication method for interfacing instance - options: (token|ldap)",
+		Name:    "config.auth-method",
+		Usage:   "authentication method for interfacing instance - options: (token|ldap)",
+		EnvVars: []string{"PARAMETER_AUTH_METHOD", "SECRET_AUTH_METHOD", "VAULT_AUTH_METHOD"},
 	},
 	&cli.StringFlag{
-		Name:  "config.password",
-		Usage: "password for server authentication with LDAP",
+		Name:    "config.password",
+		Usage:   "password for server authentication with LDAP",
+		EnvVars: []string{"PARAMETER_PASSWORD", "SECRET_VAULT_PASSWORD", "VELA_VAULT_PASSWORD", "VAULT_PASSWORD"},
 	},
 	&cli.StringFlag{
-		Name:  "config.token",
-		Usage: "token for server authentication",
+		Name:    "config.token",
+		Usage:   "token for server authentication",
+		EnvVars: []string{"PARAMETER_TOKEN", "SECRET_VAULT_TOKEN", "VELA_VAULT_TOKEN", "VAULT_TOKEN"},
 	},
 	&cli.StringFlag{
-		Name:  "config.username",
-		Usage: "username for server authentication with LDAP",
+		Name:    "config.username",
+		Usage:   "username for server authentication with LDAP",
+		EnvVars: []string{"PARAMETER_USERNAME", "SECRET_VAULT_USERNAME", "VELA_VAULT_USERNAME", "VAULT_USERNAME"},
 	},
 }

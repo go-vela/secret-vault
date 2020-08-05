@@ -99,7 +99,7 @@ func (r *Read) Exec(v *vault.Client) error {
 			// set the secret in the Vela temp build volume
 			logrus.Tracef("write data to file %s", path)
 
-			err = a.WriteFile(path, []byte(v.(string)), 0444)
+			err = a.WriteFile(path, []byte(v.(string)), 0600)
 			if err != nil {
 				return err
 			}

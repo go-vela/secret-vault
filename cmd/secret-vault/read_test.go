@@ -16,7 +16,7 @@ func TestVault_Read_Exec(t *testing.T) {
 	vault, _ := vault.NewMock(t)
 	source := "secret/foo"
 	r := &Read{
-		Items: []Item{
+		Items: []*Item{
 			{
 				Path:   "foobar",
 				Source: source,
@@ -47,7 +47,7 @@ func TestVault_Read_Validate_success(t *testing.T) {
 		{
 			// success
 			read: &Read{
-				Items: []Item{
+				Items: []*Item{
 					{
 						Path:   "foobar",
 						Source: "/path/to/secret",
@@ -76,7 +76,7 @@ func TestVault_Read_Validate_failure(t *testing.T) {
 		{
 			// error with no path
 			read: &Read{
-				Items: []Item{
+				Items: []*Item{
 					{
 						Source: "/path/to/secret",
 					},
@@ -87,7 +87,7 @@ func TestVault_Read_Validate_failure(t *testing.T) {
 		{
 			// error with no source
 			read: &Read{
-				Items: []Item{
+				Items: []*Item{
 					{
 						Path: "foobar",
 					},

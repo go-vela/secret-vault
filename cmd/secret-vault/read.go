@@ -42,7 +42,7 @@ type (
 	// Read represents the plugin configuration reading secrets to the environment.
 	Read struct {
 		// is a list of items that are in a Vault instance
-		Items []Item
+		Items []*Item
 		// raw input of items provided for plugin
 		RawItems string
 	}

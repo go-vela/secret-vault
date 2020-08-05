@@ -51,7 +51,7 @@ func (p *Plugin) Validate() error {
 	// serialize provided items into expected type
 	err = p.Read.Unmarshal()
 	if err != nil {
-		return fmt.Errorf("unable to unmarshal items: %v", err)
+		return fmt.Errorf("unable to unmarshal items %s: %w", p.Read.RawItems, err)
 	}
 
 	// validate read configuration

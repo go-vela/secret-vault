@@ -109,7 +109,7 @@ func (r *Read) Exec(v *vault.Client) error {
 // Unmarshal captures the provided properties and
 // serializes them into their expected form.
 func (r *Read) Unmarshal() error {
-	logrus.Trace("unmarshaling raw props")
+	logrus.Trace("unmarshaling raw items")
 
 	// cast raw items into bytes
 	bytes := []byte(r.RawItems)

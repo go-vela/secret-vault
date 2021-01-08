@@ -14,7 +14,7 @@ require (
 	github.com/mitchellh/mapstructure v1.3.3 // indirect
 	github.com/pierrec/lz4 v2.5.2+incompatible // indirect
 	github.com/sirupsen/logrus v1.7.0
-	github.com/spf13/afero v1.3.2
+	github.com/spf13/afero v1.5.1
 	github.com/spf13/pflag v1.0.2 // indirect
 	github.com/urfave/cli/v2 v2.2.0
 	golang.org/x/crypto v0.0.0-20200604202706-70a84ac30bf9 // indirect

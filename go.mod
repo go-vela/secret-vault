@@ -5,7 +5,7 @@ go 1.15
 require (
 	github.com/cpuguy83/go-md2man/v2 v2.0.0 // indirect
 	github.com/hashicorp/vault v1.6.1
-	github.com/hashicorp/vault/api v1.0.5-0.20201001211907-38d91b749c77
+	github.com/hashicorp/vault/api v1.6.2
 	github.com/joho/godotenv v1.3.0
 	github.com/sirupsen/logrus v1.7.0
 	github.com/spf13/afero v1.5.1

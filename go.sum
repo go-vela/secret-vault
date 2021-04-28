@@ -156,8 +156,8 @@ github.com/armon/go-metrics v0.3.0/go.mod h1:zXjbSimjXTd7vOpY8B0/2LpvNvDoXBuplAD
 github.com/armon/go-metrics v0.3.3/go.mod h1:4O98XIr/9W0sxpJ8UaYkvjk10Iff7SnFrb4QAOwNTFc=
 github.com/armon/go-metrics v0.3.4 h1:Xqf+7f2Vhl9tsqDYmXhnXInUdcrtgpRNpIA15/uldSc=
 github.com/armon/go-metrics v0.3.4/go.mod h1:4O98XIr/9W0sxpJ8UaYkvjk10Iff7SnFrb4QAOwNTFc=
-github.com/armon/go-proxyproto v0.0.0-20190211145416-68259f75880e h1:h0gP0hBU6DsA5IQduhLWGOEfIUKzJS5hhXQBSgHuF/g=
-github.com/armon/go-proxyproto v0.0.0-20190211145416-68259f75880e/go.mod h1:QmP9hvJ91BbJmGVGSbutW19IC0Q9phDCLGaomwTJbgU=
+github.com/armon/go-proxyproto v0.0.0-20210323213023-7e956b284f0a h1:AP/vsCIvJZ129pdm9Ek7bH7yutN3hByqsMoNrWAxRQc=
+github.com/armon/go-proxyproto v0.0.0-20210323213023-7e956b284f0a/go.mod h1:QmP9hvJ91BbJmGVGSbutW19IC0Q9phDCLGaomwTJbgU=
 github.com/armon/go-radix v0.0.0-20180808171621-7fddfc383310/go.mod h1:ufUuZ+zHj4x4TnLV4JWEpy2hxWSpsRywHrMgIH9cCH8=
 github.com/armon/go-radix v1.0.0 h1:F4z6KzEeeQIMeLFa97iZU6vupzoecKdU5TX24SNppXI=
 github.com/armon/go-radix v1.0.0/go.mod h1:ufUuZ+zHj4x4TnLV4JWEpy2hxWSpsRywHrMgIH9cCH8=
@@ -408,8 +408,8 @@ github.com/gobuffalo/packd v0.1.0/go.mod h1:M2Juc+hhDXf/PnmBANFCqx4DM3wRbgDvnVWe
 github.com/gobuffalo/packr/v2 v2.0.9/go.mod h1:emmyGweYTm6Kdper+iywB6YK5YzuKchGtJQZ0Odn4pQ=
 github.com/gobuffalo/packr/v2 v2.2.0/go.mod h1:CaAwI0GPIAv+5wKLtv8Afwl+Cm78K/I/VCm/3ptBN+0=
 github.com/gobuffalo/syncx v0.0.0-20190224160051-33c29581e754/go.mod h1:HhnNqWY95UYwwW3uSASeV7vtgYkT2t16hJgV3AEPUpw=
-github.com/gocql/gocql v0.0.0-20200624222514-34081eda590e h1:SroDcndcOU9BVAduPf/PXihXoR2ZYTQYLXbupbqxAyQ=
-github.com/gocql/gocql v0.0.0-20200624222514-34081eda590e/go.mod h1:DL0ekTmBSTdlNF25Orwt/JMzqIq3EJ4MVa/J/uK64OY=
+github.com/gocql/gocql v0.0.0-20210401103645-80ab1e13e309 h1:8MHuCGYDXh0skFrLumkCMlt9C29hxhqNx39+Haemeqw=
+github.com/gocql/gocql v0.0.0-20210401103645-80ab1e13e309/go.mod h1:DL0ekTmBSTdlNF25Orwt/JMzqIq3EJ4MVa/J/uK64OY=
 github.com/godbus/dbus v0.0.0-20190422162347-ade71ed3457e/go.mod h1:bBOAhwG1umN6/6ZUMtDFBMQR8jRg9O75tm9K00oMsK4=
 github.com/godbus/dbus/v5 v5.0.3/go.mod h1:xhWf0FNVPg57R7Z0UbKHbJfkEywrmjJnf7w5xrFpKfA=
 github.com/gogo/googleapis v1.1.0/go.mod h1:gf4bu3Q80BeJ6H1S1vYPm8/ELATdvryBaNFGgqEef3s=
@@ -642,8 +642,8 @@ github.com/hashicorp/serf v0.8.2/go.mod h1:6hOLApaqBFA1NXqRQAsxw9QxuDEvNxSQRwA/J
 github.com/hashicorp/serf v0.9.4/go.mod h1:UWDWwZeL5cuWDJdl0C6wrvrUwEqtQ4ZKBKKENpqIUyk=
 github.com/hashicorp/serf v0.9.5 h1:EBWvyu9tcRszt3Bxp3KNssBMP1KuHWyO51lz9+786iM=
 github.com/hashicorp/serf v0.9.5/go.mod h1:UWDWwZeL5cuWDJdl0C6wrvrUwEqtQ4ZKBKKENpqIUyk=
-github.com/hashicorp/vault v1.7.0 h1:7ALa1gIYN9ONhLlVUtTuWFM/vZpUpchbuAmSMoOt61I=
-github.com/hashicorp/vault v1.7.0/go.mod h1:l4Z0KEtPXWc0bsEJYy7TUP/M2d4xJoqAjDpJYRncbOs=
+github.com/hashicorp/vault v1.7.1 h1:i+t3jv0KDSXPmTVJivuGnSoxKnO18qbId1gDdLeRLvg=
+github.com/hashicorp/vault v1.7.1/go.mod h1:5IuWQFsLHljHQgRfsTtISAfWowr5RKZ0sco014KxjCE=
 github.com/hashicorp/vault-plugin-auth-alicloud v0.8.0 h1:UZH3bYGanW5UNpGloqS4FUnQH/ZphIiL5uSsVAUj1bY=
 github.com/hashicorp/vault-plugin-auth-alicloud v0.8.0/go.mod h1:lyfBMcULXKJfVu8dNo1w9bUikV5oem5HKmJoWwXupnY=
 github.com/hashicorp/vault-plugin-auth-azure v0.7.2 h1:Fxd6tVYtNaBSDhP+RKxSRZ7VsBekZQKmyXwcPSWTlm0=
@@ -655,8 +655,8 @@ github.com/hashicorp/vault-plugin-auth-cf v0.8.0/go.mod h1:exPUMj8yNohKM7yRiHa7O
 github.com/hashicorp/vault-plugin-auth-gcp v0.5.1/go.mod h1:eLj92eX8MPI4vY1jaazVLF2sVbSAJ3LRHLRhF/pUmlI=
 github.com/hashicorp/vault-plugin-auth-gcp v0.9.0 h1:57uJ2Vqo+M+W7pD8xEONKJ1BBGS8V4xpm7VU56A9RWA=
 github.com/hashicorp/vault-plugin-auth-gcp v0.9.0/go.mod h1:sHDguHmyGScoalGLEjuxvDCrMPVlw2c3f+ieeiHcv6w=
-github.com/hashicorp/vault-plugin-auth-jwt v0.9.2 h1:ghOYlco5t4q+rNecMWC5Cb8jguLiig168jYlBc5QtKk=
-github.com/hashicorp/vault-plugin-auth-jwt v0.9.2/go.mod h1:Gn6ELc1X5nmZ/pxoXf0nA4lG2gwuGnY6SNyW40tR/ws=
+github.com/hashicorp/vault-plugin-auth-jwt v0.9.3 h1:ZErbJ0Zf+GNavs+75FQn9VuPqEn81NvG5t4FskGyEeQ=
+github.com/hashicorp/vault-plugin-auth-jwt v0.9.3/go.mod h1:Gn6ELc1X5nmZ/pxoXf0nA4lG2gwuGnY6SNyW40tR/ws=
 github.com/hashicorp/vault-plugin-auth-kerberos v0.3.0 h1:QxW0gRevydrNfRvo1qI6p0jQkhedLUgiWqpCN36RXoQ=
 github.com/hashicorp/vault-plugin-auth-kerberos v0.3.0/go.mod h1:h+7pLm4Z2EeKHOGPefX0bGzdUQCMBUlvM/BpSMNgTFw=
 github.com/hashicorp/vault-plugin-auth-kubernetes v0.9.0 h1:X/eXFuJqVW8YN73ohTaI5YyCwcjd6C3mpnMv/elkNrw=
@@ -713,8 +713,8 @@ github.com/hashicorp/vault/sdk v0.1.14-0.20201022214319-d87657199d4b/go.mod h1:c
 github.com/hashicorp/vault/sdk v0.1.14-0.20210106220500-0ddc32f2ab8a/go.mod h1:cAGI4nVnEfAyMeqt9oB+Mase8DNn3qA/LDNHURiwssY=
 github.com/hashicorp/vault/sdk v0.1.14-0.20210127185906-6b455835fa8c/go.mod h1:cAGI4nVnEfAyMeqt9oB+Mase8DNn3qA/LDNHURiwssY=
 github.com/hashicorp/vault/sdk v0.1.14-0.20210204230556-cf85a862b7c6/go.mod h1:cAGI4nVnEfAyMeqt9oB+Mase8DNn3qA/LDNHURiwssY=
-github.com/hashicorp/vault/sdk v0.1.14-0.20210322210658-b52b8b8c1264 h1:HBea5s9BAi5tPYeBt5IDZX1bamxpgfyAQWy9JSOCPK8=
-github.com/hashicorp/vault/sdk v0.1.14-0.20210322210658-b52b8b8c1264/go.mod h1:cAGI4nVnEfAyMeqt9oB+Mase8DNn3qA/LDNHURiwssY=
+github.com/hashicorp/vault/sdk v0.2.1-0.20210419223509-b296e151b5b3 h1:AmUZeMFsGhQSra+gnwKYrmxz2XcW8WbZlf9GWHglM+I=
+github.com/hashicorp/vault/sdk v0.2.1-0.20210419223509-b296e151b5b3/go.mod h1:cAGI4nVnEfAyMeqt9oB+Mase8DNn3qA/LDNHURiwssY=
 github.com/hashicorp/vic v1.5.1-0.20190403131502-bbfe86ec9443 h1:O/pT5C1Q3mVXMyuqg7yuAWUg/jMZR1/0QTzTRdNR6Uw=
 github.com/hashicorp/vic v1.5.1-0.20190403131502-bbfe86ec9443/go.mod h1:bEpDU35nTu0ey1EXjwNwPjI9xErAsoOCmcMb9GKvyxo=
 github.com/hashicorp/yamux v0.0.0-20180604194846-3520598351bb/go.mod h1:+NfK9FKeTrX5uv1uIXGdwYDTeHna2qgaIlx54MXqjAM=

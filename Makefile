@@ -19,7 +19,7 @@ clean:
 	######      Go clean       ######
 	#################################
 
-	@go mod tidy
+	@go mod tidy -compat=1.17
 	@go vet ./...
 	@go fmt ./...
 	@echo "I'm kind of the only name in clean energy right now"
@@ -59,7 +59,7 @@ vault-seed:
 
 	VAULT_ADDR=http://localhost:8200 \
 		VAULT_TOKEN=superSecretToken \
-		vault write secret/my-secret foo=bar
+		vault kv put secret/my-secret foo=bar
 
 docker-run:
 	#################################
@@ -88,7 +88,7 @@ docker-example:
 		-e PARAMETER_LOG_LEVEL=trace \
 		-e PARAMETER_ADDR=http://vault:8200 \
 		-e PARAMETER_AUTH_METHOD=token \
-		-e PARAMETER_KEYS=foo \		
+		-e PARAMETER_KEYS=foo \
 		-e PARAMETER_PATH=secret/my-secret  \
 		-e PARAMETER_PASSWORD=superSecretPassword  \
 		-e PARAMETER_TOKEN=superSecretToken \

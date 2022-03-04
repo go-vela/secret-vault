@@ -15,7 +15,7 @@ import (
 func TestVault_Read_Exec(t *testing.T) {
 	// step types
 	vault, _ := vault.NewMock(t)
-	source := "secret/foo"
+	source := "/secret/foo"
 	r := &Read{
 		Items: []*Item{
 			{
@@ -29,6 +29,7 @@ func TestVault_Read_Exec(t *testing.T) {
 	appFS = afero.NewMemMapFs()
 
 	// initialize vault with test data
+	// nolint: errcheck // error cehck not needed
 	vault.Vault.Logical().Write(source, map[string]interface{}{
 		"secret": "bar",
 	})

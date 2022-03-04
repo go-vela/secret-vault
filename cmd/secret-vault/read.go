@@ -18,23 +18,23 @@ import (
 
 var (
 	// ErrNoKeysProvided defines the error type when a
-	// no items were provided for a Vault read
+	// no items were provided for a Vault read.
 	ErrNoItemsProvided = errors.New("no items provided")
 
 	// ErrNoPathProvided defines the error type when a
-	// no path was provided for a Vault read
+	// no path was provided for a Vault read.
 	ErrNoPathProvided = errors.New("no path provided")
 
 	// ErrNoKeysProvided defines the error type when a
-	// no keys was provided for a Vault read
+	// no keys was provided for a Vault read.
 	ErrNoSourceProvided = errors.New("no source provided")
 
 	// appFS is a new os filesystem implementation for
-	// interacting with modifications to the filesystem
+	// interacting with modifications to the filesystem.
 	appFS = afero.NewOsFs()
 
-	// SecretVolume defines volume that stores secrets
-	// during a build execution
+	// SecretVolume defines volume that stores secrets during a build execution
+	// nolint: gosec // false pos
 	SecretVolume = "/vela/secrets/%s/"
 )
 
@@ -56,7 +56,7 @@ type (
 	}
 )
 
-// Exec runs the read for collecting secrets
+// Exec runs the read for collecting secrets.
 func (r *Read) Exec(v *vault.Client) error {
 	logrus.Debug("running plugin with provided configuration")
 
@@ -70,7 +70,7 @@ func (r *Read) Exec(v *vault.Client) error {
 		path := strings.TrimPrefix(item.Path, "/")
 
 		// remove any trailing slashes from path
-		path = strings.TrimSuffix(item.Path, "/")
+		path = strings.TrimSuffix(path, "/")
 
 		// read data from the vault provider
 		logrus.Tracef("reading data from path %s", item.Source)
@@ -93,7 +93,6 @@ func (r *Read) Exec(v *vault.Client) error {
 
 		// loop through keys in vault secret
 		for k, v := range secret.Data {
-
 			path = target + k
 
 			// set the secret in the Vela temp build volume
@@ -137,12 +136,12 @@ func (r *Read) Validate() error {
 	for i, item := range r.Items {
 		// verify path is provided
 		if len(item.Path) == 0 {
-			return fmt.Errorf("%s for item %d", ErrNoPathProvided, i)
+			return fmt.Errorf("%w for item %d", ErrNoPathProvided, i)
 		}
 
 		// verify source is provided
 		if len(item.Source) == 0 {
-			return fmt.Errorf("%s for item %d", ErrNoSourceProvided, i)
+			return fmt.Errorf("%w for item %d", ErrNoSourceProvided, i)
 		}
 	}
 

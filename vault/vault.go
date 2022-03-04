@@ -16,10 +16,10 @@ import (
 )
 
 const (
-	// LDAPAuthMethod is used for creating a client capable of LDAP authentication
+	// LDAPAuthMethod is used for creating a client capable of LDAP authentication.
 	LDAPAuthMethod = "ldap"
 
-	// TokenAuthMethod is used for creating a client capable of token authentication
+	// TokenAuthMethod is used for creating a client capable of token authentication.
 	TokenAuthMethod = "token"
 )
 
@@ -54,7 +54,7 @@ var (
 	ErrInvalidAuthMethod = errors.New("invalid auth method provided")
 
 	// LDAPUserPath defines the path the user information gets
-	// written to after success LDAP authentication
+	// written to after success LDAP authentication.
 	LDAPUserPath = "/auth/ldap/login/%s"
 )
 
@@ -104,7 +104,7 @@ func New(s *Setup) (*Client, error) {
 
 		return &Client{Vault: vault}, nil
 	default:
-		return nil, fmt.Errorf("%s: %s (Valid auth methods: %s, %s)",
+		return nil, fmt.Errorf("%w: %s (Valid auth methods: %s, %s)",
 			ErrInvalidAuthMethod,
 			s.AuthMethod,
 			LDAPAuthMethod,

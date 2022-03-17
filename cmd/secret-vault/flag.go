@@ -10,8 +10,7 @@ import (
 	"github.com/go-vela/secret-vault/vault"
 )
 
-// helper function to load the flags into
-// the plugin configuration
+// helper function to load the flags into the plugin configuration.
 func flags() []cli.Flag {
 	f := []cli.Flag{
 		&cli.StringFlag{

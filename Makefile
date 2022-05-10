@@ -1,4 +1,4 @@
-# Copyright (c) 2022 Target Brands, Inc. All rights reserved.
+# Copyright (c) 2021 Target Brands, Inc. All rights reserved.
 #
 # Use of this source code is governed by the LICENSE file in this repository.
 
@@ -88,9 +88,10 @@ docker-example:
 		-e PARAMETER_LOG_LEVEL=trace \
 		-e PARAMETER_ADDR=http://vault:8200 \
 		-e PARAMETER_AUTH_METHOD=token \
-		-e PARAMETER_KEYS=foo \
-		-e PARAMETER_PATH=secret/my-secret  \
-		-e PARAMETER_PASSWORD=superSecretPassword  \
+		-e PARAMETER_KEY=foo \
+		-e PARAMETER_PATH=secret/my-secret \
+		-e PARAMETER_ITEMS='[{"source": "secret/my-secret/foo", "path": "vela"}]' \
+		-e PARAMETER_PASSWORD=superSecretPassword \
 		-e PARAMETER_TOKEN=superSecretToken \
 		-e PARAMETER_USERNAME=myusername \
 		secret-vault:local

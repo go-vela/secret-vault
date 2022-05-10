@@ -1,4 +1,4 @@
-// Copyright (c) 2021 Target Brands, Inc. All rights reserved.
+// Copyright (c) 2022 Target Brands, Inc. All rights reserved.
 //
 // Use of this source code is governed by the LICENSE file in this repository.
 
@@ -15,7 +15,7 @@ import (
 func TestVault_Read_Exec(t *testing.T) {
 	// step types
 	vault, _ := vault.NewMock(t)
-	source := "secret/foo"
+	source := "/secret/foo"
 	r := &Read{
 		Items: []*Item{
 			{
@@ -29,6 +29,7 @@ func TestVault_Read_Exec(t *testing.T) {
 	appFS = afero.NewMemMapFs()
 
 	// initialize vault with test data
+	// nolint: errcheck // error check not needed
 	vault.Vault.Logical().Write(source, map[string]interface{}{
 		"secret": "bar",
 	})

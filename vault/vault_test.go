@@ -1,10 +1,11 @@
-// Copyright (c) 2021 Target Brands, Inc. All rights reserved.
+// Copyright (c) 2022 Target Brands, Inc. All rights reserved.
 //
 // Use of this source code is governed by the LICENSE file in this repository.
 
 package vault
 
 import (
+	"errors"
 	"fmt"
 	"net/http"
 	"net/http/httptest"
@@ -46,7 +47,7 @@ func TestVault_New(t *testing.T) {
 	// run test
 	for _, test := range tests {
 		vault, err := New(test.setup)
-		if err != test.err {
+		if !errors.Is(err, test.err) {
 			t.Errorf("New returned err: %v", err)
 		}
 
@@ -93,7 +94,7 @@ func TestVault_New_Error(t *testing.T) {
 	// run test
 	for _, test := range tests {
 		_, err := New(test.setup)
-		if err == test.err {
+		if errors.Is(err, test.err) {
 			t.Errorf("New returned err: %v", err)
 		}
 	}

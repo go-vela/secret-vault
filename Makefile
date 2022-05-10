@@ -1,4 +1,4 @@
-# Copyright (c) 2021 Target Brands, Inc. All rights reserved.
+# Copyright (c) 2022 Target Brands, Inc. All rights reserved.
 #
 # Use of this source code is governed by the LICENSE file in this repository.
 
@@ -19,7 +19,7 @@ clean:
 	######      Go clean       ######
 	#################################
 
-	@go mod tidy -compat=1.17
+	@go mod tidy
 	@go vet ./...
 	@go fmt ./...
 	@echo "I'm kind of the only name in clean energy right now"

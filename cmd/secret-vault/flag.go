@@ -1,4 +1,4 @@
-// Copyright (c) 2021 Target Brands, Inc. All rights reserved.
+// Copyright (c) 2022 Target Brands, Inc. All rights reserved.
 //
 // Use of this source code is governed by the LICENSE file in this repository.
 
@@ -10,8 +10,7 @@ import (
 	"github.com/go-vela/secret-vault/vault"
 )
 
-// helper function to load the flags into
-// the plugin configuration
+// helper function to load the flags into the plugin configuration.
 func flags() []cli.Flag {
 	f := []cli.Flag{
 		&cli.StringFlag{

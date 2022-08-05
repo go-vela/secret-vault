@@ -59,7 +59,7 @@ vault-seed:
 
 	VAULT_ADDR=http://localhost:8200 \
 		VAULT_TOKEN=superSecretToken \
-		vault write secret/my-secret foo=bar
+		vault kv put secret/my-secret foo=bar
 
 docker-run:
 	#################################
@@ -88,9 +88,10 @@ docker-example:
 		-e PARAMETER_LOG_LEVEL=trace \
 		-e PARAMETER_ADDR=http://vault:8200 \
 		-e PARAMETER_AUTH_METHOD=token \
-		-e PARAMETER_KEYS=foo \		
-		-e PARAMETER_PATH=secret/my-secret  \
-		-e PARAMETER_PASSWORD=superSecretPassword  \
+		-e PARAMETER_KEY=foo \
+		-e PARAMETER_PATH=secret/my-secret \
+		-e PARAMETER_ITEMS='[{"source": "secret/my-secret/foo", "path": "vela"}]' \
+		-e PARAMETER_PASSWORD=superSecretPassword \
 		-e PARAMETER_TOKEN=superSecretToken \
 		-e PARAMETER_USERNAME=myusername \
 		secret-vault:local

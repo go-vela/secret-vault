@@ -43,14 +43,14 @@ compose-up:
 	###### Docker Build/Start  ######
 	#################################
 
-	@docker-compose -f docker-compose.yml.vault up -d # start a Vault app
+	@docker-compose -f docker-compose.yml up -d # start a Vault app
 
 compose-down:
 	#################################
 	###### Docker Tear Down    ######
 	#################################
 
-	@docker-compose -f docker-compose.yml.vault down	
+	@docker-compose -f docker-compose.yml down	
 
 vault-seed:
 	#################################

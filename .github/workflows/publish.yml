@@ -27,7 +27,7 @@ jobs:
           github.com/go-vela/secret-vault/cmd/secret-vault
 
     - name: publish
-      uses: elgohr/Publish-Docker-Github-Action@master
+      uses: elgohr/Publish-Docker-Github-Action@v4
       with:
         name: target/secret-vault
         cache: true

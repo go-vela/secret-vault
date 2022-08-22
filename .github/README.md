@@ -3,7 +3,7 @@
 [![license](https://img.shields.io/crates/l/gl.svg)](../LICENSE)
 [![GoDoc](https://godoc.org/github.com/go-vela/vela-secret?status.svg)](https://godoc.org/github.com/go-vela/vela-secret)
 [![Go Report Card](https://goreportcard.com/badge/go-vela/vela-secret)](https://goreportcard.com/report/go-vela/vela-secret)
-[![codecov](https://codecov.io/gh/go-vela/vela-secret/branch/master/graph/badge.svg)](https://codecov.io/gh/go-vela/vela-secret)
+[![codecov](https://codecov.io/gh/go-vela/vela-secret/branch/main/graph/badge.svg)](https://codecov.io/gh/go-vela/vela-secret)
 
 > Vela is in active development and is a pre-release product.
 >

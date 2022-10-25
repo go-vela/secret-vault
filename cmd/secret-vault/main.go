@@ -67,10 +67,8 @@ func run(c *cli.Context) error {
 	}
 
 	logrus.WithFields(logrus.Fields{
-		"code": "https://github.com/go-vela/secret-vault",
-
-		// TODO think about a place for secret plugin docs
-		// "docs":     "",
+		"code":     "https://github.com/go-vela/secret-vault",
+		"docs":     "https://go-vela.github.io/docs/plugins/registry/secret/vault/",
 		"registry": "https://hub.docker.com/r/target/secret-vela",
 	}).Info("Vela Secret Vault Plugin")
 

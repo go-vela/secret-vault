@@ -5,7 +5,7 @@ go 1.18
 require (
 	github.com/hashicorp/vault v1.11.4
 	github.com/hashicorp/vault/api v1.7.2
-	github.com/joho/godotenv v1.4.0
+	github.com/joho/godotenv v1.5.1
 	github.com/sirupsen/logrus v1.9.0
 	github.com/spf13/afero v1.9.2
 	github.com/urfave/cli/v2 v2.17.1

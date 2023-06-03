@@ -6,8 +6,8 @@ require (
 	github.com/hashicorp/vault v1.11.4
 	github.com/hashicorp/vault/api v1.7.2
 	github.com/joho/godotenv v1.4.0
-	github.com/sirupsen/logrus v1.9.0
-	github.com/spf13/afero v1.9.2
+	github.com/sirupsen/logrus v1.9.3
+	github.com/spf13/afero v1.9.5
 	github.com/urfave/cli/v2 v2.17.1
 )
 
@@ -174,7 +174,7 @@ require (
 	go.etcd.io/bbolt v1.3.6 // indirect
 	go.opencensus.io v0.23.0 // indirect
 	go.uber.org/atomic v1.9.0 // indirect
-	golang.org/x/crypto v0.0.0-20220622213112-05595931fe9d // indirect
+	golang.org/x/crypto v0.0.0-20220722155217-630584e8d5aa // indirect
 	golang.org/x/net v0.0.0-20220127200216-cd36cc0744dd // indirect
 	golang.org/x/oauth2 v0.0.0-20211104180415-d3ed0bb246c8 // indirect
 	golang.org/x/sync v0.0.0-20210220032951-036812b2e83c // indirect

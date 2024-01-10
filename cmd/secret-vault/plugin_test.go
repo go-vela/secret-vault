@@ -17,7 +17,7 @@ func TestVault_Plugin_Validate(t *testing.T) {
 	// setup types
 	items, _ := json.Marshal([]Item{
 		{
-			Path:   "foobar",
+			Path:   []string{"foobar"},
 			Source: "/path/to/secret",
 		},
 	})

@@ -14,10 +14,11 @@ func TestVault_Read_Exec(t *testing.T) {
 	// step types
 	vault, _ := vault.NewMock(t)
 	source := "/secret/foo"
+	path := []string{"foobar", "foobar2"}
 	r := &Read{
 		Items: []*Item{
 			{
-				Path:   "foobar",
+				Path:   path,
 				Source: source,
 			},
 		},
@@ -49,7 +50,7 @@ func TestVault_Read_Validate_success(t *testing.T) {
 			read: &Read{
 				Items: []*Item{
 					{
-						Path:   "foobar",
+						Path:   []string{"foobar", "foobar2"},
 						Source: "/path/to/secret",
 					},
 				},
@@ -89,7 +90,19 @@ func TestVault_Read_Validate_failure(t *testing.T) {
 			read: &Read{
 				Items: []*Item{
 					{
-						Path: "foobar",
+						Path: []string{"foobar", "foobar2"},
+					},
+				},
+			},
+			err: ErrNoSourceProvided,
+		},
+		{
+			// error with nil path
+			read: &Read{
+				Items: []*Item{
+					{
+						Source: "/path/to/secret",
+						Path:   []string{""},
 					},
 				},
 			},
@@ -111,13 +124,13 @@ func TestVault_Read_Unmarshal(t *testing.T) {
 	r := &Read{
 		RawItems: `
 		[
-			{"path":"foo","source":"secret/vela/hello_world"}
+			{"path":["foo", "foo2"],"source":"secret/vela/hello_world"}
 		]
 		`}
 
 	want := []*Item{
 		{
-			Path:   "foo",
+			Path:   []string{"foo", "foo2"},
 			Source: "secret/vela/hello_world",
 		},
 	}

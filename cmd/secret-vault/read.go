@@ -32,7 +32,7 @@ var (
 	appFS = afero.NewOsFs()
 
 	// SecretVolume defines volume that stores secrets during a build execution
-	// nolint: gosec // false pos
+	//nolint: gosec // false pos
 	SecretVolume = "/vela/secrets/%s/"
 )
 
@@ -134,13 +134,13 @@ func (r *Read) Validate() error {
 	}
 
 	for i, item := range r.Items {
-
 		// verify that at least one path was provided
 		if len(item.Path) == 0 {
 			return fmt.Errorf("%w for item %d %s", ErrNoPathProvided, i, r.RawItems)
 		}
 
 		noPath := 0
+
 		for _, path := range item.Path {
 			// verify that at least one non-nil path was provided
 			if len(path) != 0 {

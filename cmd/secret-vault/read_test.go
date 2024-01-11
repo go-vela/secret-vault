@@ -28,7 +28,7 @@ func TestVault_Read_Exec(t *testing.T) {
 	appFS = afero.NewMemMapFs()
 
 	// initialize vault with test data
-	// nolint: errcheck // error check not needed
+	//nolint: errcheck // error check not needed
 	vault.Vault.Logical().Write(source, map[string]interface{}{
 		"secret": "bar",
 	})

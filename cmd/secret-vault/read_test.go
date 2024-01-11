@@ -35,7 +35,36 @@ func TestVault_Read_Exec(t *testing.T) {
 
 	err := r.Exec(vault)
 	if err != nil {
-		t.Errorf("Validate returned err: %v", err)
+		t.Errorf("Exec returned err: %v", err)
+	}
+}
+
+func TestVault_Read_Exec_Fail(t *testing.T) {
+	// step types
+	vault, _ := vault.NewMock(t)
+	source := ""
+	path := []string{"foobar", "foobar2"}
+	r := &Read{
+		Items: []*Item{
+			{
+				Path:   path,
+				Source: source,
+			},
+		},
+	}
+
+	// setup filesystem
+	appFS = afero.NewMemMapFs()
+
+	// initialize vault with test data
+	//nolint: errcheck // error check not needed
+	vault.Vault.Logical().Write(source, map[string]interface{}{
+		"secret": "bar",
+	})
+
+	err := r.Exec(vault)
+	if err == nil {
+		t.Errorf("Exec should have returned err: %v", err)
 	}
 }
 
@@ -74,6 +103,13 @@ func TestVault_Read_Validate_failure(t *testing.T) {
 		read *Read
 		err  error
 	}{
+		{
+			// error with no items
+			read: &Read{
+				Items: []*Item{},
+			},
+			err: ErrNoItemsProvided,
+		},
 		{
 			// error with no path
 			read: &Read{
@@ -142,5 +178,20 @@ func TestVault_Read_Unmarshal(t *testing.T) {
 
 	if !reflect.DeepEqual(r.Items, want) {
 		t.Errorf("Unmarshal is %v, want %v", r.Items, want)
+	}
+}
+
+func TestVault_Read_Unmarshal_Fail(t *testing.T) {
+	// setup types
+	r := &Read{
+		RawItems: `
+		[
+			{"path":"foo,"source":"secret/vela/hello_world"}
+		]
+		`}
+
+	err := r.Unmarshal()
+	if err == nil {
+		t.Errorf("Unmarshal should have returned err: %v", err)
 	}
 }

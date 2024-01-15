@@ -10,6 +10,7 @@ import (
 	"strings"
 
 	"github.com/go-vela/secret-vault/vault"
+	"github.com/go-vela/types/raw"
 	"github.com/sirupsen/logrus"
 	"github.com/spf13/afero"
 )
@@ -50,7 +51,7 @@ type (
 		// is the path to where the secret is stored in Vault
 		Source string
 		// are the paths to store the key in Vela
-		Path []string
+		Path raw.StringSlice
 	}
 )
 

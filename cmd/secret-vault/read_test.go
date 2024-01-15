@@ -181,6 +181,32 @@ func TestVault_Read_Unmarshal(t *testing.T) {
 	}
 }
 
+func TestVault_Read_Unmarshal_Single_Path(t *testing.T) {
+	// setup types
+	r := &Read{
+		RawItems: `
+		[
+			{"path":"foo","source":"secret/vela/hello_world"}
+		]
+		`}
+
+	want := []*Item{
+		{
+			Path:   []string{"foo"},
+			Source: "secret/vela/hello_world",
+		},
+	}
+
+	err := r.Unmarshal()
+	if err != nil {
+		t.Errorf("Unmarshal returned err: %v", err)
+	}
+
+	if !reflect.DeepEqual(r.Items, want) {
+		t.Errorf("Unmarshal is %v, want %v", r.Items, want)
+	}
+}
+
 func TestVault_Read_Unmarshal_Fail(t *testing.T) {
 	// setup types
 	r := &Read{

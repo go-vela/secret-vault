@@ -1,6 +1,6 @@
 module github.com/go-vela/secret-vault
 
-go 1.20
+go 1.21
 
 require (
 	github.com/hashicorp/vault v1.14.1
@@ -78,6 +78,7 @@ require (
 	github.com/go-ozzo/ozzo-validation v3.6.0+incompatible // indirect
 	github.com/go-sql-driver/mysql v1.6.0 // indirect
 	github.com/go-test/deep v1.1.0 // indirect
+	github.com/go-vela/types v0.22.0
 	github.com/gogo/protobuf v1.3.2 // indirect
 	github.com/golang-jwt/jwt/v4 v4.5.0 // indirect
 	github.com/golang/groupcache v0.0.0-20210331224755-41bb18bfe9da // indirect

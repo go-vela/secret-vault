@@ -10,6 +10,7 @@ import (
 	"strings"
 
 	"github.com/go-vela/secret-vault/vault"
+	"github.com/go-vela/types/raw"
 	"github.com/sirupsen/logrus"
 	"github.com/spf13/afero"
 )
@@ -32,7 +33,7 @@ var (
 	appFS = afero.NewOsFs()
 
 	// SecretVolume defines volume that stores secrets during a build execution
-	// nolint: gosec // false pos
+	//nolint: gosec // false pos
 	SecretVolume = "/vela/secrets/%s/"
 )
 
@@ -49,8 +50,8 @@ type (
 	Item struct {
 		// is the path to where the secret is stored in Vault
 		Source string
-		// is the path to store the key in Vela
-		Path string
+		// are the paths to store the key in Vela
+		Path raw.StringSlice
 	}
 )
 
@@ -64,41 +65,43 @@ func (r *Read) Exec(v *vault.Client) error {
 	}
 
 	for _, item := range r.Items {
-		// remove any leading slashes from path
-		path := strings.TrimPrefix(item.Path, "/")
+		for _, pth := range item.Path {
+			// remove any leading slashes from path
+			path := strings.TrimPrefix(pth, "/")
 
-		// remove any trailing slashes from path
-		path = strings.TrimSuffix(path, "/")
+			// remove any trailing slashes from path
+			path = strings.TrimSuffix(path, "/")
 
-		// read data from the vault provider
-		logrus.Tracef("reading data from path %s", item.Source)
+			// read data from the vault provider
+			logrus.Tracef("reading data from path %s", item.Source)
 
-		secret, err := v.Read(item.Source)
-		if err != nil {
-			return err
-		}
-
-		// set the location of where to write the secret
-		target := fmt.Sprintf(SecretVolume, path)
-
-		// send Filesystem call to create directory path for .netrc file
-		logrus.Tracef("creating directories in path %s", path)
-
-		err = a.Fs.MkdirAll(filepath.Dir(target), 0777)
-		if err != nil {
-			return err
-		}
-
-		// loop through keys in vault secret
-		for k, v := range secret.Data {
-			path = target + k
-
-			// set the secret in the Vela temp build volume
-			logrus.Tracef("write data to file %s", path)
-
-			err = a.WriteFile(path, []byte(v.(string)), 0600)
+			secret, err := v.Read(item.Source)
 			if err != nil {
 				return err
+			}
+
+			// set the location of where to write the secret
+			target := fmt.Sprintf(SecretVolume, path)
+
+			// send Filesystem call to create directory path for .netrc file
+			logrus.Tracef("creating directories in path %s", path)
+
+			err = a.Fs.MkdirAll(filepath.Dir(target), 0777)
+			if err != nil {
+				return err
+			}
+
+			// loop through keys in vault secret
+			for k, v := range secret.Data {
+				path = target + k
+
+				// set the secret in the Vela temp build volume
+				logrus.Tracef("write data to file %s", path)
+
+				err = a.WriteFile(path, []byte(v.(string)), 0600)
+				if err != nil {
+					return err
+				}
 			}
 		}
 	}
@@ -132,9 +135,23 @@ func (r *Read) Validate() error {
 	}
 
 	for i, item := range r.Items {
-		// verify path is provided
+		// verify that at least one path was provided
 		if len(item.Path) == 0 {
-			return fmt.Errorf("%w for item %d", ErrNoPathProvided, i)
+			return fmt.Errorf("%w for item %d %s", ErrNoPathProvided, i, r.RawItems)
+		}
+
+		noPath := 0
+
+		for _, path := range item.Path {
+			// verify that at least one non-nil path was provided
+			if len(path) != 0 {
+				noPath = 1
+				break
+			}
+		}
+
+		if noPath == 0 {
+			return fmt.Errorf("%w for item %d %s", ErrNoPathProvided, i, r.RawItems)
 		}
 
 		// verify source is provided

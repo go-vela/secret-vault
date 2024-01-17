@@ -9,15 +9,11 @@ import (
 	"github.com/go-vela/secret-vault/vault"
 )
 
-func TestVault_Plugin_Exec(t *testing.T) {
-	// TODO write this test
-}
-
 func TestVault_Plugin_Validate(t *testing.T) {
 	// setup types
 	items, _ := json.Marshal([]Item{
 		{
-			Path:   "foobar",
+			Path:   []string{"foobar"},
 			Source: "/path/to/secret",
 		},
 	})

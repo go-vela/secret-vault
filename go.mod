@@ -2,7 +2,6 @@ module github.com/go-vela/secret-vault
 
 go 1.23.0
 
-
 require (
 	github.com/hashicorp/vault v1.16.1
 	github.com/hashicorp/vault/api v1.14.0

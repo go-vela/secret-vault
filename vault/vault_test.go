@@ -15,7 +15,9 @@ func TestVault_New(t *testing.T) {
 	fake := httptest.NewServer(http.NotFoundHandler())
 	defer fake.Close()
 
-	vault, _ := NewMock(t)
+	vault, cluster, _ := NewMock(t)
+
+	defer cluster.Cleanup()
 
 	// setup types
 	tests := []struct {

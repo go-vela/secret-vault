@@ -11,7 +11,9 @@ import (
 
 func TestVault_Read(t *testing.T) {
 	// step types
-	vault, _ := NewMock(t)
+	vault, cluster, _ := NewMock(t)
+	defer cluster.Cleanup()
+
 	path := "secret/foo"
 	want := &api.Secret{
 		Data: map[string]interface{}{
@@ -20,14 +22,17 @@ func TestVault_Read(t *testing.T) {
 	}
 
 	// initialize vault with test data
-	_, _ = vault.Vault.Logical().Write("secret/foo", map[string]interface{}{
+	_, err := vault.Vault.Logical().Write("secret/foo", map[string]interface{}{
 		"secret": "bar",
 	})
+	if err != nil {
+		t.Errorf("Write returned err: %v", err)
+	}
 
 	// run
 	got, err := vault.Read(path)
 	if err != nil {
-		t.Errorf("Count returned err: %v", err)
+		t.Errorf("Read returned err: %v", err)
 	}
 
 	if !reflect.DeepEqual(got.Data, want.Data) {

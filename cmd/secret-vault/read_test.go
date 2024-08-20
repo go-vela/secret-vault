@@ -15,11 +15,16 @@ func TestVault_Read_Exec(t *testing.T) {
 	vault, _ := vault.NewMock(t)
 	source := "/secret/foo"
 	path := []string{"foobar", "foobar2"}
+	keys := map[string]string{
+		"secret": "my_secret",
+	}
+
 	r := &Read{
 		Items: []*Item{
 			{
 				Path:   path,
 				Source: source,
+				Keys:   keys,
 			},
 		},
 	}
@@ -160,7 +165,7 @@ func TestVault_Read_Unmarshal(t *testing.T) {
 	r := &Read{
 		RawItems: `
 		[
-			{"path":["foo", "foo2"],"source":"secret/vela/hello_world"}
+			{"path":["foo", "foo2"],"source":"secret/vela/hello_world","keys":{"foo":"bar"}}
 		]
 		`}
 
@@ -168,6 +173,9 @@ func TestVault_Read_Unmarshal(t *testing.T) {
 		{
 			Path:   []string{"foo", "foo2"},
 			Source: "secret/vela/hello_world",
+			Keys: map[string]string{
+				"foo": "bar",
+			},
 		},
 	}
 
@@ -213,6 +221,21 @@ func TestVault_Read_Unmarshal_Fail(t *testing.T) {
 		RawItems: `
 		[
 			{"path":"foo,"source":"secret/vela/hello_world"}
+		]
+		`}
+
+	err := r.Unmarshal()
+	if err == nil {
+		t.Errorf("Unmarshal should have returned err: %v", err)
+	}
+}
+
+func TestVault_Read_Unmarshal_Fail_BadKeyMap(t *testing.T) {
+	// setup types
+	r := &Read{
+		RawItems: `
+		[
+			{"path":["foo", "foo2"],"source":"secret/vela/hello_world","keys":["foo=bar"]}
 		]
 		`}
 

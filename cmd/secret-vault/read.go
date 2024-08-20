@@ -52,6 +52,8 @@ type (
 		Source string
 		// are the paths to store the key in Vela
 		Path raw.StringSlice
+		// key overwrite option
+		Keys map[string]string
 	}
 )
 
@@ -94,6 +96,11 @@ func (r *Read) Exec(v *vault.Client) error {
 			// loop through keys in vault secret
 			for k, v := range secret.Data {
 				path = target + k
+
+				// if there is a key override, set the new path
+				if overrideKey, ok := item.Keys[k]; ok {
+					path = target + overrideKey
+				}
 
 				// set the secret in the Vela temp build volume
 				logrus.Tracef("write data to file %s", path)

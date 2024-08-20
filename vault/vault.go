@@ -8,8 +8,7 @@ import (
 	"testing"
 
 	"github.com/hashicorp/vault/api"
-	"github.com/hashicorp/vault/http"
-	"github.com/hashicorp/vault/vault"
+	"github.com/hashicorp/vault/sdk/helper/testcluster/docker"
 	"github.com/sirupsen/logrus"
 )
 
@@ -118,32 +117,24 @@ func New(s *Setup) (*Client, error) {
 
 // NewMock returns a test unsealed Vault
 // to integrate with a Vault secret provider.
-//
-// This function is intended for running tests only.
-//
-// Docs: https://pkg.go.dev/github.com/hashicorp/vault/vault?tab=doc
-func NewMock(t *testing.T) (*Client, error) {
-	// Create an in-memory, unsealed core (the "backend", if you will).
-	//
-	// Pinned commit version in Go.sum:
-	// https://github.com/hashicorp/vault/issues/9072
-	core, keyShares, rootToken := vault.TestCoreUnsealed(t)
-	_ = keyShares
+func NewMock(t *testing.T) (*Client, *docker.DockerCluster, error) {
+	opts := &docker.DockerClusterOptions{
+		ImageRepo: "hashicorp/vault", // or "hashicorp/vault-enterprise"
+		ImageTag:  "latest",
+	}
+	cluster := docker.NewTestDockerCluster(t, opts)
 
-	// Start an HTTP server for the core.
-	_, addr := http.TestServer(t, core)
+	client := cluster.Nodes()[0].APIClient()
 
-	// Create a client that talks to the server, initially authenticating with
-	// the root token.
-	c, err := api.NewClient(&api.Config{Address: addr})
+	err := client.Sys().Mount("secret", &api.MountInput{
+		Type: "kv",
+		Options: map[string]string{
+			"version": "1",
+		},
+	})
 	if err != nil {
-		t.Fatal(err)
+		return nil, nil, err
 	}
 
-	// set Vault API token in client
-	c.SetToken(rootToken)
-
-	return &Client{
-		Vault: c,
-	}, nil
+	return &Client{Vault: client}, cluster, nil
 }

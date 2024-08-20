@@ -12,7 +12,9 @@ import (
 
 func TestVault_Read_Exec(t *testing.T) {
 	// step types
-	vault, _ := vault.NewMock(t)
+	vault, cluster, _ := vault.NewMock(t)
+	defer cluster.Cleanup()
+
 	source := "/secret/foo"
 	path := []string{"foobar", "foobar2"}
 	keys := map[string]string{
@@ -46,8 +48,10 @@ func TestVault_Read_Exec(t *testing.T) {
 
 func TestVault_Read_Exec_Fail(t *testing.T) {
 	// step types
-	vault, _ := vault.NewMock(t)
-	source := ""
+	vault, cluster, _ := vault.NewMock(t)
+	defer cluster.Cleanup()
+
+	source := "secret"
 	path := []string{"foobar", "foobar2"}
 	r := &Read{
 		Items: []*Item{

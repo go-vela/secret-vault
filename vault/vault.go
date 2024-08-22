@@ -84,7 +84,7 @@ func New(s *Setup) (*Client, error) {
 		}
 
 		// vault will return a nil Auth struct with no error if path is correct but password fails
-		if user.Auth == nil {
+		if user == nil || user.Auth == nil {
 			return nil, fmt.Errorf("unable to set user token: authentication failed")
 		}
 

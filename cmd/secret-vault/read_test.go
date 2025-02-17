@@ -3,10 +3,14 @@
 package main
 
 import (
+	"bytes"
+	"os"
+	"path/filepath"
 	"reflect"
 	"testing"
 
 	"github.com/go-vela/secret-vault/vault"
+	"github.com/joho/godotenv"
 	"github.com/spf13/afero"
 )
 
@@ -43,6 +47,36 @@ func TestVault_Read_Exec(t *testing.T) {
 	err := r.Exec(vault)
 	if err != nil {
 		t.Errorf("Exec returned err: %v", err)
+	}
+
+	os.Setenv("VELA_MASKED_OUTPUTS", "/vela/outputs/masked.env")
+
+	err = appFS.MkdirAll(filepath.Dir("/vela/outputs/masked.env"), 0777)
+	if err != nil {
+		t.Error(err)
+	}
+
+	err = r.Exec(vault)
+	if err != nil {
+		t.Errorf("Exec returned err: %v", err)
+	}
+
+	a := &afero.Afero{
+		Fs: appFS,
+	}
+
+	rawOutputs, err := a.ReadFile("/vela/outputs/masked.env")
+	if err != nil {
+		t.Errorf("unable to read outputs file: %v", err)
+	}
+
+	envMap, err := godotenv.Parse(bytes.NewReader(rawOutputs))
+	if err != nil {
+		t.Errorf("unable to parse outputs file: %v", err)
+	}
+
+	if envMap["VELA_SECRETS_FOOBAR_MY_SECRET"] != "bar" {
+		t.Errorf("Exec is %v, want %v", envMap["foobar_foobar2_secret"], "bar")
 	}
 }
 

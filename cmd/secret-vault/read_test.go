@@ -4,7 +4,6 @@ package main
 
 import (
 	"bytes"
-	"os"
 	"path/filepath"
 	"reflect"
 	"testing"
@@ -49,7 +48,7 @@ func TestVault_Read_Exec(t *testing.T) {
 		t.Errorf("Exec returned err: %v", err)
 	}
 
-	os.Setenv("VELA_MASKED_OUTPUTS", "/vela/outputs/masked.env")
+	t.Setenv("VELA_MASKED_OUTPUTS", "/vela/outputs/masked.env")
 
 	err = appFS.MkdirAll(filepath.Dir("/vela/outputs/masked.env"), 0777)
 	if err != nil {

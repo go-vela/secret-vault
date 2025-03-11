@@ -3,14 +3,17 @@
 package main
 
 import (
+	"bytes"
 	"encoding/json"
 	"errors"
 	"fmt"
+	"os"
 	"path/filepath"
 	"strings"
 
 	"github.com/go-vela/secret-vault/vault"
 	"github.com/go-vela/types/raw"
+	"github.com/joho/godotenv"
 	"github.com/sirupsen/logrus"
 	"github.com/spf13/afero"
 )
@@ -66,6 +69,24 @@ func (r *Read) Exec(v *vault.Client) error {
 		Fs: appFS,
 	}
 
+	var outputs map[string]string
+
+	outputsPath := os.Getenv("VELA_MASKED_OUTPUTS")
+
+	// if the masked Vela outputs is configured, create a map to store the values to write later
+	if len(outputsPath) > 0 {
+		rawOutputs, err := a.ReadFile(outputsPath)
+		if err != nil {
+			logrus.Debugf("empty masked outputs file. creating one...")
+		}
+
+		// godotenv has a Read, but for testing it will not read a memory map FS
+		outputs, err = godotenv.Parse(bytes.NewReader(rawOutputs))
+		if err != nil {
+			return err
+		}
+	}
+
 	for _, item := range r.Items {
 		for _, pth := range item.Path {
 			// remove any leading slashes from path
@@ -109,7 +130,27 @@ func (r *Read) Exec(v *vault.Client) error {
 				if err != nil {
 					return err
 				}
+
+				if len(outputsPath) > 0 {
+					// create key of VELA_SECRETS_<path>_<key>
+					envKey := strings.ReplaceAll(strings.ToUpper(strings.TrimPrefix(path, "/")), "/", "_")
+
+					outputs[envKey] = v.(string)
+				}
 			}
+		}
+	}
+
+	if len(outputsPath) > 0 {
+		// godotenv has a Write, but for testing it will not write to a memory map FS
+		content, err := godotenv.Marshal(outputs)
+		if err != nil {
+			return err
+		}
+
+		err = a.WriteFile(outputsPath, []byte(content), 0600)
+		if err != nil {
+			return err
 		}
 	}
 

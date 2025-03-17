@@ -8,9 +8,10 @@ import (
 	"reflect"
 	"testing"
 
-	"github.com/go-vela/secret-vault/vault"
 	"github.com/joho/godotenv"
 	"github.com/spf13/afero"
+
+	"github.com/go-vela/secret-vault/vault"
 )
 
 func TestVault_Read_Exec(t *testing.T) {

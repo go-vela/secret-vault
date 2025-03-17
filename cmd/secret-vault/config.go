@@ -6,8 +6,9 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/go-vela/secret-vault/vault"
 	"github.com/sirupsen/logrus"
+
+	"github.com/go-vela/secret-vault/vault"
 )
 
 // Config represents the plugin configuration for Vault config information.

@@ -11,11 +11,12 @@ import (
 	"path/filepath"
 	"strings"
 
-	"github.com/go-vela/secret-vault/vault"
-	"github.com/go-vela/types/raw"
 	"github.com/joho/godotenv"
 	"github.com/sirupsen/logrus"
 	"github.com/spf13/afero"
+
+	"github.com/go-vela/secret-vault/vault"
+	"github.com/go-vela/server/compiler/types/raw"
 )
 
 var (

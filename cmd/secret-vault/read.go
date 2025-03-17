@@ -146,12 +146,18 @@ func (r *Read) Exec(v *vault.Client) error {
 		// godotenv has a Write, but for testing it will not write to a memory map FS
 		content, err := godotenv.Marshal(outputs)
 		if err != nil {
-			return err
+			logrus.Warnf("error marshaling secret values to outputs file. values will not be masked if accidentally logged.")
+
+			//nolint:nilerr // error string can contain sensitive information
+			return nil
 		}
 
 		err = a.WriteFile(outputsPath, []byte(content), 0600)
 		if err != nil {
-			return err
+			logrus.Warnf("error writing secret values to outputs file. values will not be masked if accidentally logged.")
+
+			//nolint:nilerr // error string can contain sensitive information
+			return nil
 		}
 	}
 

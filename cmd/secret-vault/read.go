@@ -10,6 +10,7 @@ import (
 	"os"
 	"path/filepath"
 	"strings"
+	"unicode"
 
 	"github.com/joho/godotenv"
 	"github.com/sirupsen/logrus"
@@ -84,7 +85,7 @@ func (r *Read) Exec(v *vault.Client) error {
 		// godotenv has a Read, but for testing it will not read a memory map FS
 		outputs, err = godotenv.Parse(bytes.NewReader(rawOutputs))
 		if err != nil {
-			return err
+			logrus.Warn("error parsing masked outputs file. values will not be masked if accidentally logged, nor will they be available in the environment.")
 		}
 	}
 
@@ -133,8 +134,8 @@ func (r *Read) Exec(v *vault.Client) error {
 				}
 
 				if len(outputsPath) > 0 {
-					// create key of VELA_SECRETS_<path>_<key>
-					envKey := strings.ReplaceAll(strings.ToUpper(strings.TrimPrefix(path, "/")), "/", "_")
+					// create key of VELA_SECRETS_<path>_<key> with sanitized characters
+					envKey := sanitizeEnvKey(strings.ToUpper(strings.TrimPrefix(path, "/")))
 
 					outputs[envKey] = v.(string)
 				}
@@ -146,7 +147,7 @@ func (r *Read) Exec(v *vault.Client) error {
 		// godotenv has a Write, but for testing it will not write to a memory map FS
 		content, err := godotenv.Marshal(outputs)
 		if err != nil {
-			logrus.Warnf("error marshaling secret values to outputs file. values will not be masked if accidentally logged.")
+			logrus.Warn("error marshaling secret values to outputs file. values will not be masked if accidentally logged, nor will they be available in the environment.")
 
 			//nolint:nilerr // error string can contain sensitive information
 			return nil
@@ -154,7 +155,7 @@ func (r *Read) Exec(v *vault.Client) error {
 
 		err = a.WriteFile(outputsPath, []byte(content), 0600)
 		if err != nil {
-			logrus.Warnf("error writing secret values to outputs file. values will not be masked if accidentally logged.")
+			logrus.Warn("error writing secret values to outputs file. values will not be masked if accidentally logged, nor will they be available in the environment.")
 
 			//nolint:nilerr // error string can contain sensitive information
 			return nil
@@ -216,4 +217,21 @@ func (r *Read) Validate() error {
 	}
 
 	return nil
+}
+
+// sanitizeEnvKey is a helper function that copies the key locator logic from the godotenv library
+// and applies it to the vault keys for outputs.
+func sanitizeEnvKey(s string) string {
+	bytes := []byte(s)
+
+	// use same logic as godotenv
+	for i, c := range bytes {
+		if unicode.IsLetter(rune(c)) || unicode.IsNumber(rune(c)) || c == '.' {
+			continue
+		}
+
+		bytes[i] = '_'
+	}
+
+	return string(bytes)
 }

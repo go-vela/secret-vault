@@ -41,7 +41,9 @@ func TestVault_Read_Exec(t *testing.T) {
 	// initialize vault with test data
 	//nolint: errcheck // error check not needed
 	vault.Vault.Logical().Write(source, map[string]interface{}{
-		"secret": "bar",
+		"secret":             "bar",
+		"dash-secret":        "baz",
+		"crazy??//!.#secret": "bazzy",
 	})
 
 	err := r.Exec(vault)
@@ -76,7 +78,15 @@ func TestVault_Read_Exec(t *testing.T) {
 	}
 
 	if envMap["VELA_SECRETS_FOOBAR_MY_SECRET"] != "bar" {
-		t.Errorf("Exec is %v, want %v", envMap["foobar_foobar2_secret"], "bar")
+		t.Errorf("Exec is %v, want %v", envMap["VELA_SECRETS_FOOBAR_MY_SECRET"], "bar")
+	}
+
+	if envMap["VELA_SECRETS_FOOBAR_DASH_SECRET"] != "baz" {
+		t.Errorf("Exec is %v, want %v", envMap["VELA_SECRETS_FOOBAR_DASH_SECRET"], "baz")
+	}
+
+	if envMap["VELA_SECRETS_FOOBAR_CRAZY_____._SECRET"] != "bazzy" {
+		t.Errorf("Exec is %v, want %v", envMap["VELA_SECRETS_FOOBAR_CRAZY_____._SECRET"], "bazzy")
 	}
 }
 

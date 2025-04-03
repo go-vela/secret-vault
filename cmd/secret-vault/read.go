@@ -111,7 +111,7 @@ func (r *Read) Exec(v *vault.Client) error {
 			// send Filesystem call to create directory path for .netrc file
 			logrus.Tracef("creating directories in path %s", path)
 
-			err = a.Fs.MkdirAll(filepath.Dir(target), 0777)
+			err = a.MkdirAll(filepath.Dir(target), 0777)
 			if err != nil {
 				return err
 			}

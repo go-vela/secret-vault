@@ -14,7 +14,7 @@ Sample of retrieving a secret using token authentication:
 secrets:
   - origin:
       name: vault
-      image: target/vela/secret-vault:latest
+      image: target/secret-vault:latest
       parameters:
         addr: vault.company.com
         token: superSecretVaultToken
@@ -31,7 +31,7 @@ Sample of retrieving a secret using ldap authentication:
 secrets:
   - origin:
       name: vault
-      image: target/vela/secret-vault:latest
+      image: target/secret-vault:latest
       parameters:
         addr: vault.company.com
 +       username: octocat
@@ -50,7 +50,7 @@ Sample of reading a secret using ldap authentication with verbose logging:
 secrets:
   - origin:
       name: vault
-      image: target/vela/secret-vault:latest
+      image: target/secret-vault:latest
       parameters:
         addr: vault.company.com
         username: octocat
@@ -69,7 +69,7 @@ Sample of retrieving a secret and writing it to multiple paths with a new key:
 secrets:
   - origin:
       name: vault
-      image: target/vela/secret-vault:latest
+      image: target/secret-vault:latest
       secrets:
         - source: superSecretToken
           target: vault_token
@@ -104,7 +104,7 @@ secrets:
   # Example using token authentication method
   - origin:
       name: vault
-      image: target/vela/secret-vault:latest
+      image: target/secret-vault:latest
       secret: [ vault_token ]
       parameters:
         addr: vault.company.com

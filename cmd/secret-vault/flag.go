@@ -3,7 +3,7 @@
 package main
 
 import (
-	"github.com/urfave/cli/v2"
+	"github.com/urfave/cli/v3"
 
 	"github.com/go-vela/secret-vault/vault"
 )
@@ -14,7 +14,7 @@ func flags() []cli.Flag {
 		&cli.StringFlag{
 			Name:    "items",
 			Usage:   "list of items to extract from a Vault",
-			EnvVars: []string{"PARAMETER_ITEMS", "ITEMS"},
+			Sources: cli.EnvVars("PARAMETER_ITEMS", "ITEMS"),
 		},
 	}
 

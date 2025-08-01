@@ -3,47 +3,41 @@
 package main
 
 import (
+	"context"
 	"log"
+	"net/mail"
 	"os"
-	"time"
 
 	"github.com/sirupsen/logrus"
-	"github.com/urfave/cli/v2"
+	"github.com/urfave/cli/v3"
 
 	_ "github.com/joho/godotenv/autoload"
 )
 
 func main() {
-	app := cli.NewApp()
-
-	// Plugin Information
-	app.Name = "secret-vault"
-	app.HelpName = "secret-vault"
-	app.Usage = "Vela Vault secret plugin for sourcing secrets into pipelines"
-	app.Copyright = "Copyright 2020 Target Brands, Inc. All rights reserved."
-	app.Authors = []*cli.Author{
-		{
-			Name:  "Vela Admins",
-			Email: "vela@target.com",
+	app := &cli.Command{
+		Name:      "secret-vault",
+		Usage:     "Vela Vault secret plugin for sourcing secrets into pipelines",
+		Copyright: "Copyright 2020 Target Brands, Inc. All rights reserved.",
+		Authors: []any{
+			&mail.Address{
+				Name:    "Vela Admins",
+				Address: "vela@target.com",
+			},
 		},
+		Action: run,
+		Flags:  flags(),
 	}
 
-	// Plugin Metadata
-	app.Compiled = time.Now()
-	app.Action = run
-
-	// Plugin Flags
-	app.Flags = flags()
-
 	// Plugin Start
-	err := app.Run(os.Args)
+	err := app.Run(context.Background(), os.Args)
 	if err != nil {
 		log.Fatal(err)
 	}
 }
 
 // run executes the plugin based off the configuration provided.
-func run(c *cli.Context) error {
+func run(_ context.Context, c *cli.Command) error {
 	// set the log level for the plugin
 	switch c.String("log.level") {
 	case "t", "trace", "Trace", "TRACE":

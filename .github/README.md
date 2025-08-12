@@ -17,6 +17,10 @@ Vela uses a syntax similar to [Docker Compose](https://docs.docker.com/compose/)
 
 For installation and usage, please [visit our docs](https://go-vela.github.io/docs).
 
+## Compatibility
+
+This plugin is currently pinned to `hashicorp/vault/api:1.16.0`. See [this issue](https://github.com/go-vela/community/issues/1065).
+
 ## Contributing
 
 We are always welcome to new pull requests!

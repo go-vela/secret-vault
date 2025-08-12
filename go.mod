@@ -3,7 +3,7 @@ module github.com/go-vela/secret-vault
 go 1.24.5
 
 require (
-	github.com/hashicorp/vault/api v1.20.0
+	github.com/hashicorp/vault/api v1.16.0
 	github.com/joho/godotenv v1.5.1
 	github.com/sirupsen/logrus v1.9.3
 	github.com/spf13/afero v1.14.0
@@ -64,7 +64,7 @@ require (
 	github.com/hashicorp/go-sockaddr v1.0.7 // indirect
 	github.com/hashicorp/go-uuid v1.0.3 // indirect
 	github.com/hashicorp/hcl v1.0.1-vault-7 // indirect
-	github.com/hashicorp/vault/sdk v0.18.0
+	github.com/hashicorp/vault/sdk v0.15.2
 	github.com/klauspost/compress v1.18.0 // indirect
 	github.com/mattn/go-colorable v0.1.14 // indirect
 	github.com/mattn/go-isatty v0.0.20 // indirect

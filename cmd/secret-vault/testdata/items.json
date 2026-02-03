@@ -1,0 +1,40 @@
+[
+  {
+    "source": "secret/team/database",
+    "keys": [
+      {
+        "name": "connection",
+        "target": [
+          "DB_CONNECTION"
+        ]
+      }
+    ]
+  },
+  {
+    "source": "secret/team/nua",
+    "keys": [
+      {
+        "name": "username",
+        "target": [
+          "DOCKER_USERNAME",
+          "ARTIFACTORY_USERNAME"
+        ],
+        "path": [
+          "docker/username",
+          "artifactory/username"
+        ]
+      },
+      {
+        "name": "password",
+        "target": [
+          "DOCKER_PASSWORD",
+          "ARTIFACTORY_PASSWORD"
+        ],
+        "path": [
+          "docker/password",
+          "artifactory/password"
+        ]
+      }
+    ]
+  }
+]

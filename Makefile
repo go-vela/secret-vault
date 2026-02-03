@@ -93,3 +93,9 @@ docker-example:
 		-e PARAMETER_TOKEN=superSecretToken \
 		-e PARAMETER_USERNAME=myusername \
 		secret-vault:local
+
+.PHONY: lintfix
+lintfix:
+	@echo
+	@echo "### Fixing Go code with linter"
+	@golangci-lint run ./... --fix

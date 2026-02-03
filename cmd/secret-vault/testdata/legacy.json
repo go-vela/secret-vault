@@ -1,0 +1,10 @@
+[
+  {
+    "source": "secret/team/database",
+    "path": "database"
+  },
+  {
+    "source": "secret/team/nua",
+    "path": ["docker", "artifactory"]
+  }
+]

@@ -3,6 +3,7 @@ module github.com/go-vela/secret-vault
 go 1.24.5
 
 require (
+	github.com/google/go-cmp v0.7.0
 	github.com/hashicorp/vault/api v1.16.0
 	github.com/joho/godotenv v1.5.1
 	github.com/sirupsen/logrus v1.9.3
@@ -55,6 +56,7 @@ require (
 	github.com/golang/snappy v1.0.0 // indirect
 	github.com/hashicorp/errwrap v1.1.0 // indirect
 	github.com/hashicorp/go-cleanhttp v0.5.2 // indirect
+	github.com/hashicorp/go-envparse v0.1.0
 	github.com/hashicorp/go-hclog v1.6.3 // indirect
 	github.com/hashicorp/go-multierror v1.1.1 // indirect
 	github.com/hashicorp/go-retryablehttp v0.7.8 // indirect

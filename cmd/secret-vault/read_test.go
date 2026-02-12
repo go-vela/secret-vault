@@ -4,33 +4,33 @@ package main
 
 import (
 	"bytes"
+	"encoding/base64"
+	"os"
 	"path/filepath"
 	"reflect"
 	"testing"
 
-	"github.com/joho/godotenv"
+	"github.com/google/go-cmp/cmp"
+	"github.com/hashicorp/go-envparse"
 	"github.com/spf13/afero"
 
 	"github.com/go-vela/secret-vault/vault"
+	"github.com/go-vela/server/compiler/types/raw"
 )
 
-func TestVault_Read_Exec(t *testing.T) {
+func TestVault_Read_Exec_Legacy(t *testing.T) {
 	// step types
 	vault, cluster, _ := vault.NewMock(t)
 	defer cluster.Cleanup()
 
 	source := "/secret/foo"
 	path := []string{"foobar", "foobar2"}
-	keys := map[string]string{
-		"secret": "my_secret",
-	}
 
 	r := &Read{
 		Items: []*Item{
 			{
 				Path:   path,
 				Source: source,
-				Keys:   keys,
 			},
 		},
 	}
@@ -51,12 +51,14 @@ func TestVault_Read_Exec(t *testing.T) {
 		t.Errorf("Exec returned err: %v", err)
 	}
 
-	t.Setenv("VELA_MASKED_OUTPUTS", "/vela/outputs/masked.env")
+	t.Setenv("VELA_MASKED_BASE64_OUTPUTS", "/vela/outputs/masked.env")
 
 	err = appFS.MkdirAll(filepath.Dir("/vela/outputs/masked.env"), 0777)
 	if err != nil {
 		t.Error(err)
 	}
+
+	r.OutputsPath = "/vela/outputs/masked.env"
 
 	err = r.Exec(vault)
 	if err != nil {
@@ -72,21 +74,128 @@ func TestVault_Read_Exec(t *testing.T) {
 		t.Errorf("unable to read outputs file: %v", err)
 	}
 
-	envMap, err := godotenv.Parse(bytes.NewReader(rawOutputs))
+	envMap, err := envparse.Parse(bytes.NewReader(rawOutputs))
 	if err != nil {
 		t.Errorf("unable to parse outputs file: %v", err)
 	}
 
-	if envMap["VELA_SECRETS_FOOBAR_MY_SECRET"] != "bar" {
-		t.Errorf("Exec is %v, want %v", envMap["VELA_SECRETS_FOOBAR_MY_SECRET"], "bar")
+	for k, v := range envMap {
+		// decode the base64 value
+		decodedValue, err := base64.StdEncoding.DecodeString(v)
+		if err != nil {
+			t.Errorf("unable to decode base64 value for key %s: %v", k, err)
+		}
+
+		envMap[k] = string(decodedValue)
+	}
+
+	if envMap["VELA_SECRETS_FOOBAR_SECRET"] != "bar" {
+		t.Errorf("Exec is %v, want %v", envMap["VELA_SECRETS_FOOBAR_SECRET"], "bar")
 	}
 
 	if envMap["VELA_SECRETS_FOOBAR_DASH_SECRET"] != "baz" {
 		t.Errorf("Exec is %v, want %v", envMap["VELA_SECRETS_FOOBAR_DASH_SECRET"], "baz")
 	}
 
-	if envMap["VELA_SECRETS_FOOBAR_CRAZY_____._SECRET"] != "bazzy" {
-		t.Errorf("Exec is %v, want %v", envMap["VELA_SECRETS_FOOBAR_CRAZY_____._SECRET"], "bazzy")
+	if envMap["VELA_SECRETS_FOOBAR_CRAZY_______SECRET"] != "bazzy" {
+		t.Errorf("Exec is %v, want %v", envMap["VELA_SECRETS_FOOBAR_CRAZY_______SECRET"], "bazzy")
+	}
+}
+
+func TestVault_Read_Exec(t *testing.T) {
+	// step types
+	vault, cluster, _ := vault.NewMock(t)
+	defer cluster.Cleanup()
+
+	source := "/secret/foo"
+
+	r := &Read{
+		Items: []*Item{
+			{
+				Source: source,
+				Keys: map[string]KeyItem{
+					"secret": {
+						Name:   "secret",
+						Target: raw.StringSlice{"TEST_SECRET", "TEST_SECRET_COPY"},
+					},
+					"dash-secret": {
+						Name:   "dash-secret",
+						Target: raw.StringSlice{"TEST_DASH_SECRET"},
+						Path:   raw.StringSlice{"custom"},
+					},
+					"crazy??//!.#secret": {
+						Name:   "crazy??//!.#secret",
+						Target: raw.StringSlice{"TEST_CRAZY_SECRET"},
+					},
+				},
+			},
+		},
+	}
+
+	// setup filesystem
+	appFS = afero.NewMemMapFs()
+
+	// initialize vault with test data
+	//nolint: errcheck // error check not needed
+	vault.Vault.Logical().Write(source, map[string]interface{}{
+		"secret":             "bar",
+		"dash-secret":        "baz",
+		"crazy??//!.#secret": "bazzy",
+	})
+
+	err := r.Exec(vault)
+	if err != nil {
+		t.Errorf("Exec returned err: %v", err)
+	}
+
+	t.Setenv("VELA_MASKED_BASE64_OUTPUTS", "/vela/outputs/masked.env")
+
+	err = appFS.MkdirAll(filepath.Dir("/vela/outputs/masked.env"), 0777)
+	if err != nil {
+		t.Error(err)
+	}
+
+	r.OutputsPath = "/vela/outputs/masked.env"
+
+	err = r.Exec(vault)
+	if err != nil {
+		t.Errorf("Exec returned err: %v", err)
+	}
+
+	a := &afero.Afero{
+		Fs: appFS,
+	}
+
+	rawOutputs, err := a.ReadFile("/vela/outputs/masked.env")
+	if err != nil {
+		t.Errorf("unable to read outputs file: %v", err)
+	}
+
+	envMap, err := envparse.Parse(bytes.NewReader(rawOutputs))
+	if err != nil {
+		t.Errorf("unable to parse outputs file: %v", err)
+	}
+
+	for k, v := range envMap {
+		// decode the base64 value
+		decodedValue, err := base64.StdEncoding.DecodeString(v)
+		if err != nil {
+			t.Errorf("unable to decode base64 value for key %s: %v", k, err)
+		}
+
+		envMap[k] = string(decodedValue)
+	}
+
+	if envMap["TEST_SECRET"] != "bar" && envMap["TEST_SECRET_COPY"] != "bar" {
+		t.Errorf("Exec is %v, want %v", envMap["TEST_SECRET"], "bar")
+	}
+
+	if envMap["TEST_DASH_SECRET"] != "baz" {
+		t.Errorf("Exec is %v, want %v", envMap["TEST_DASH_SECRET"], "baz")
+	}
+
+	if envMap["TEST_CRAZY_SECRET"] != "bazzy" {
+		t.Errorf("Exec is %v, want %v", envMap["TEST_CRAZY_SECRET"], "bazzy")
 	}
 }
 
@@ -208,32 +317,83 @@ func TestVault_Read_Validate_failure(t *testing.T) {
 	}
 }
 
-func TestVault_Read_Unmarshal(t *testing.T) {
+func TestVault_Read_Unmarshal_Legacy(t *testing.T) {
+	items, err := os.ReadFile("testdata/legacy.json")
+	if err != nil {
+		t.Errorf("unable to read test items file: %v", err)
+	}
+
 	// setup types
 	r := &Read{
-		RawItems: `
-		[
-			{"path":["foo", "foo2"],"source":"secret/vela/hello_world","keys":{"foo":"bar"}}
-		]
-		`}
+		RawItems: string(items),
+	}
 
 	want := []*Item{
 		{
-			Path:   []string{"foo", "foo2"},
-			Source: "secret/vela/hello_world",
-			Keys: map[string]string{
-				"foo": "bar",
-			},
+			Source: "secret/team/database",
+			Path:   raw.StringSlice{"database"},
+		},
+		{
+			Source: "secret/team/nua",
+			Path:   raw.StringSlice{"docker", "artifactory"},
 		},
 	}
 
-	err := r.Unmarshal()
+	err = r.Unmarshal()
 	if err != nil {
 		t.Errorf("Unmarshal returned err: %v", err)
 	}
 
-	if !reflect.DeepEqual(r.Items, want) {
-		t.Errorf("Unmarshal is %v, want %v", r.Items, want)
+	if diff := cmp.Diff(want, r.Items); diff != "" {
+		t.Errorf("Unmarshal mismatch (-want +got):\n%s", diff)
+	}
+}
+
+func TestVault_Read_Unmarshal(t *testing.T) {
+	items, err := os.ReadFile("testdata/items.json")
+	if err != nil {
+		t.Errorf("unable to read test items file: %v", err)
+	}
+
+	// setup types
+	r := &Read{
+		RawItems: string(items),
+	}
+
+	want := []*Item{
+		{
+			Source: "secret/team/database",
+			Keys: map[string]KeyItem{
+				"connection": {
+					Name:   "connection",
+					Target: raw.StringSlice{"DB_CONNECTION"},
+				},
+			},
+		},
+		{
+			Source: "secret/team/nua",
+			Keys: map[string]KeyItem{
+				"username": {
+					Name:   "username",
+					Target: raw.StringSlice{"DOCKER_USERNAME", "ARTIFACTORY_USERNAME"},
+					Path:   raw.StringSlice{"docker/username", "artifactory/username"},
+				},
+				"password": {
+					Name:   "password",
+					Target: raw.StringSlice{"DOCKER_PASSWORD", "ARTIFACTORY_PASSWORD"},
+					Path:   raw.StringSlice{"docker/password", "artifactory/password"},
+				},
+			},
+		},
+	}
+
+	err = r.Unmarshal()
+	if err != nil {
+		t.Errorf("Unmarshal returned err: %v", err)
+	}
+
+	if diff := cmp.Diff(want, r.Items); diff != "" {
+		t.Errorf("Unmarshal mismatch (-want +got):\n%s", diff)
 	}
 }
 

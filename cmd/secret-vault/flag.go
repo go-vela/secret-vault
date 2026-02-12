@@ -16,6 +16,11 @@ func flags() []cli.Flag {
 			Usage:   "list of items to extract from a Vault",
 			Sources: cli.EnvVars("PARAMETER_ITEMS", "ITEMS"),
 		},
+		&cli.StringFlag{
+			Sources: cli.EnvVars("VELA_MASKED_BASE64_OUTPUTS"),
+			Name:    "vela.masked-outputs",
+			Usage:   "env file path to store secrets",
+		},
 	}
 
 	// Add the Vault specific flags

@@ -74,7 +74,8 @@ func run(_ context.Context, c *cli.Command) error {
 			Username:   c.String("config.username"),
 		},
 		Read: &Read{
-			RawItems: c.String("items"),
+			RawItems:    c.String("items"),
+			OutputsPath: c.String("vela.masked-outputs"),
 		},
 	}
 

@@ -64,7 +64,7 @@ secrets:
             path: docker
 ```
 
-Sample of retrieving a secret and writing it to multiple paths with a new key:
+Sample of retrieving a secret and customizing environment targets for the value
 ```yaml
 secrets:
   - origin:
@@ -77,15 +77,13 @@ secrets:
         addr: vault.company.com
         auth_method: token
         items:
-          # assume user_A has two keys: `id` and `token`, but we want it to be `username` and `password`
-          #
-          # this will write to `/vela/secrets/kaniko/username` and `/vela/secrets/kaniko/password`
-          # and also `/vela/secrets/artifactory/username` and `/vela/secrets/artifactory/password`
+          # assuming user_A has two keys: `username` and `password`
           - source: secret/vela/user_A
-            path: [ kaniko, artifactory ]
             keys:
-              id: username
-              token: password
+              - name: username
+                target: [ KANIKO_USERNAME, ARTIFACTORY_USERNAME ]
+              - name: password
+                target: [ KANIKO_PASSWORD, ARTIFACTORY_PASSWORD ]
 ```
 
 ## Secrets
@@ -132,11 +130,20 @@ The following parameters are used to configure the image:
 
 ### Items
 
-| Name          | Description                                              | Required  | Default      |
-| ------------- | -------------------------------------------------------- | --------- | ------------ |
-| `source`      | path to secret                                           | `true`    | `N/A`        |
-| `path`        | desired file path under `vela/secrets/` directory        | `true`    | `N/A`        |
-| `keys`        | override Vault keys (map type)                           | `false`   | `vault key`  |
+| Name          | Description                                              | Required                  | Default      |
+| ------------- | -------------------------------------------------------- | ------------------------- | ------------ |
+| `source`      | path to secret                                           | `true`                    | `N/A`        |
+| `path`        | desired file path under `vela/secrets/` directory        | `path` or `keys` required | `N/A`        |
+| `keys`        | custom environment variable or file path targets for key | `path` or `keys` required | `N/A`        |
+
+### Keys
+
+| Name          | Description                                                        | Required                    | Default      |
+| ------------- | ------------------------------------------------------------------ | --------------------------- | ------------ |
+| `name`        | name of key in a standard K-V vault                                | `true`                      | `N/A`        |
+| `target`      | desired environment variable(s) for key value                      | `target` or `path` required | `N/A`        |
+| `path`        | custom file path for key value (auto prefixed by `/vela/secrets/`) | `target` or `path` required | `N/A`        |
+
 
 
 ## Template

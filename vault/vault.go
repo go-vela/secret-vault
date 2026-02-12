@@ -119,8 +119,9 @@ func New(s *Setup) (*Client, error) {
 // to integrate with a Vault secret provider.
 func NewMock(t *testing.T) (*Client, *docker.DockerCluster, error) {
 	opts := &docker.DockerClusterOptions{
-		ImageRepo: "hashicorp/vault", // or "hashicorp/vault-enterprise"
-		ImageTag:  "latest",
+		ImageRepo:    "hashicorp/vault", // or "hashicorp/vault-enterprise"
+		ImageTag:     "latest",
+		DisableMlock: true,
 	}
 	cluster := docker.NewTestDockerCluster(t, opts)
 
